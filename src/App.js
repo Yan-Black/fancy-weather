@@ -6,30 +6,7 @@ import LocationBlock from './components/Location';
 import WeatherBlock from './components/Weather';
 import ForecastBlock from './components/Forecast';
 import MapBlock from './components/Map';
-
-const { getName } = require('country-list');
-const defaultCity = 'Minsk';
-const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-const ID_API ={
-  key: '465144289736aa',
-  base: 'https://ipinfo.io/'
-}
-const WEATHER_API = {
-  key: 'ca2af16f2e06c1e0b367014ae6b14e53',
-  base: 'https://api.openweathermap.org/data/2.5/'
-};
-const BACKGROUND_API = {
-  key: 'a96vjeJorduF_JUfRtLii9qY2b8-tX3cZG0T_Si10W0',
-  base: 'https://api.unsplash.com/photos/'
-};
-const dateBuilder = (d) => {
-  const day = days[d.getDay()];
-  const date = d.getDate();
-  const month = months[d.getMonth()];
-  const year = d.getFullYear();
-  return `${day} ${date} ${month} ${year}`;
-};
+import { getName, ID_API, WEATHER_API, BACKGROUND_API, dateBuilder } from './base/constants';
 
 function App() {
   const [query, setQuery] = useState('');
@@ -45,18 +22,17 @@ function App() {
     }
   }
 
-  function getWeatherData(defCity) {
-    fetch(`${WEATHER_API.base}weather?q=${query || defCity}&units=metric&appid=${WEATHER_API.key}`)
+  function getWeatherData() {
+    fetch(`${WEATHER_API.base}weather?q=${query}&units=metric&appid=${WEATHER_API.key}`)
       .then(res => res.json())
       .then(result => {
         setWeather(result);
         setQuery('');
-        console.log(result);  
     });
   }
 
-  function getForecast(defCity) {
-    fetch(`${WEATHER_API.base}forecast?q=${query || defCity}&units=metric&appid=${WEATHER_API.key}`)
+  function getForecast() {
+    fetch(`${WEATHER_API.base}forecast?q=${query}&units=metric&appid=${WEATHER_API.key}`)
       .then(res => res.json())
       .then(result => {
         setForecast(result);
@@ -64,7 +40,6 @@ function App() {
   }
 
   function getBackImage() {
-    getWeatherData(defaultCity)
     fetch(`${BACKGROUND_API.base}/random?orientation=landscape&per_page=1&query=nature&client_id=${BACKGROUND_API.key}`)
       .then(res => res.json())
       .then(result => { 
@@ -72,18 +47,26 @@ function App() {
       })
   }
 
-  function getId() {
+  function getUserLocation() {
     fetch(`${ID_API.base}json?token=${ID_API.key}`)
       .then(res => res.json())
       .then(result => { 
-        console.log(result);  
+        fetch(`${WEATHER_API.base}weather?q=${query || result.city}&units=metric&appid=${WEATHER_API.key}`)
+        .then(res => res.json())
+        .then(result => {
+          setWeather(result);
+          setQuery('');
+      });
+      fetch(`${WEATHER_API.base}forecast?q=${query || result.city}&units=metric&appid=${WEATHER_API.key}`)
+        .then(res => res.json())
+        .then(result => {
+          setForecast(result);
+    });  
       })
   }
 
-  useEffect(getForecast.bind(null, defaultCity), []);
-  useEffect(getWeatherData.bind(null, defaultCity), []);
+  useEffect(getUserLocation, []);
   useEffect(getBackImage, []);
-  useEffect(getId, []);
   
    return (
     <div className="App" style={{ backgroundImage: `url(${image})` }}>
@@ -98,13 +81,13 @@ function App() {
               <div className="weather-block">
                 <div className="weather-header">
                   <div className="location">
-                      <LocationBlock city={weather.name} country={weather.sys.country} />
+                      <LocationBlock city={weather.name} country={getName(weather.sys.country)} />
                     <div className="date-block">
                       <h2 className="date">{dateBuilder(new Date())}</h2>
                     </div>
                   </div>
                   <div className="clock">
-                    {/* <Clock format={'HH:mm:ss'} ticking={true} timezone={`${weather.sys.country}/${weather.name}`} /> */}
+                    <Clock format={'HH:mm:ss'} ticking={true} timezone={`${weather.sys.country}/${weather.name}`} />
                   </div>
                 </div>
                 <WeatherBlock 
@@ -151,7 +134,7 @@ function App() {
                   />
                 ) : ('')}
               </div>
-              <MapBlock />
+                <MapBlock lng={weather.coord.lon} lat={weather.coord.lat} />
             </div>
           </div>
         ) : ('')}

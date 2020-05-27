@@ -61,6 +61,7 @@ main {
 
 .clock {
   font-size: 4vw;
+  padding: 0 0.5vw;
   color: #FFF;
   width: 10%;
   margin-left: 1vw;

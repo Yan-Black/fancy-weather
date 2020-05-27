@@ -40,11 +40,11 @@ function Controls() {
     return (
           <div className="controls">
             <div className="change-image">
-              {/* <FontAwesomeIcon icon={faSyncAlt} className="rotate-icon"/> */}
+              <FontAwesomeIcon icon={faSyncAlt} className="rotate-icon"/>
             </div>
             <div className="change-lang" onClick={revealList}>
               <p className="app-lang">EN</p>
-              {/* <FontAwesomeIcon icon={faAngleDown} /> */}
+              <FontAwesomeIcon icon={faAngleDown} />
               <ul className="lang-list hidden-list" onClick={changeAppLang}>
                 <li className="RU">RU</li>
                 <li className="EN">EN</li>
