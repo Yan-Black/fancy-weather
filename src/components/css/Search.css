@@ -1,0 +1,54 @@
+* {
+    box-sizing: border-box;
+}
+
+.search-box {
+    width: 30%;
+    display: flex;
+    height: 45px;
+  }
+  
+  .search-bar, .search-but{
+    display: block;
+    cursor: pointer;
+    width: 70%;
+    padding: 0 15px;
+    appearance: none;
+    background: none;
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.5);
+    border: none;
+    border-radius: 5px 0 0 5px;
+    color: #313131;
+    font-size: 1vw;
+    transition: .4s ease;
+  }
+  
+  .mic {
+    width: 10%;
+    border-radius: none;
+    outline: none;
+    user-select: none;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+  
+  .mic-icon {
+    color: #313131;
+  }
+  
+  .mic-icon:hover {
+    color: rgba(0, 95, 32, 0.8);
+    cursor: pointer;
+  }
+  
+  .search-but {
+    border-radius: 0 5px 5px 0;
+    background-color: rgba(65, 65, 65, 0.7);
+    color: #FFF;
+    width: 20%;
+  }
+  
+  .search-but:hover {
+    background-color: rgba(27, 27, 27, 0.7);
+  }

@@ -1,0 +1,37 @@
+* {
+    box-sizing: border-box;
+}
+
+.forecast {
+    display: flex;
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    padding: 1vw 2vw;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.day, .temp-val {
+    font-size: 1.3vw;
+    text-transform: uppercase;
+}
+
+.forecast-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.forecast-temp {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.forecast-icon {
+    width: 100%;
+    height: auto;
+}
