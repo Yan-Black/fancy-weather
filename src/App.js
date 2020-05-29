@@ -7,15 +7,17 @@ import LocationBlock from './components/Location';
 import WeatherBlock from './components/Weather';
 import ForecastBlock from './components/Forecast';
 import MapBlock from './components/Map';
+// import LazyBackgroundLoader from './components/LazyImage';
 import { getName, ID_API, WEATHER_API, BACKGROUND_API, dateBuilder } from './base/constants';
 
 function App() {
   const [query, setQuery] = useState('');
   const [weather, setWeather] = useState({});
   const [forecast, setForecast] = useState({});
-  const [image, setImage] = useState({});
   const [latitude, setLat] = useState(0);
   const [longtitude, setLon] = useState(0);
+  const [sourceLoaded, setSourceLoaded] = useState(null);
+  const placeholder = './assets/images/background.jpg';
 
   function search (e) {
     if (e.key === 'Enter' || e.target.className === "search-but") {
@@ -30,7 +32,6 @@ function App() {
     fetch(`${WEATHER_API.base}weather?q=${query || idCity}&units=metric&appid=${WEATHER_API.key}`)
       .then(res => res.ok ? res.json() : Promise.reject(res))
       .then(result => {
-        console.log(result);
         setWeather(result);
         setLon(result.coord.lon);
         setLat(result.coord.lat);
@@ -59,11 +60,9 @@ function App() {
     fetch(`${BACKGROUND_API.base}/random?orientation=landscape&per_page=1&featured=nature&query=${weatherState.innerText}&client_id=${BACKGROUND_API.key}`)
       .then(res => res.ok ? res.json() : Promise.reject(res))
       .then(result => { 
-        loader.classList.remove('load-image');
-        setImage(result.urls.full);
+        LazyBackgroundLoader(result.urls.full, loader);
       })
       .catch(() => {
-        setImage('./assets/images/background.jpg');
         loader.classList.remove('load-image');
       });
   }
@@ -94,13 +93,20 @@ function App() {
     errorMessage.innerText = '';
   }
 
+  function LazyBackgroundLoader(src, elem) {  
+      const img = new Image();
+      img.src = src;
+      img.onload = () => {
+        setSourceLoaded(src);
+        elem.classList.remove('load-image');
+      }; 
+      img.onerror = () => setSourceLoaded(placeholder);      
+}
+
   useEffect(getUserLocation, []);
-  // useEffect(() => {
-  //   MapBlock.render()
-  // }, [weather.coord.lon, weather.coord.lat]);
 
    return (
-    <div className="App" style={{ backgroundImage: `url(${image})` }}>
+    <div className="App" style={{ backgroundImage: `url(${sourceLoaded ? sourceLoaded : placeholder})` }} >
       <main>
         <div className="header">
           <Controls changeImg={getBackImage}/>
@@ -164,14 +170,14 @@ function App() {
                       ]
                     }
                   />
-                ) : ('')}
+                ) : (null)}
               </div>
               {(longtitude && latitude && weather.name) ? (
                 <MapBlock lng={longtitude} lat={latitude} setLon={setLon} setLat={setLat} name={weather.name}/>
               ) : null}
             </div>
           </div>
-        ) : ('')}
+        ) : (null)}
       </main>
     </div>
   );
