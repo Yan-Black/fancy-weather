@@ -12,7 +12,7 @@ function WeatherBlock(props) {
             </div>
             <div className="current-description">
             <ul className="description-list">
-                <li>{props.desc[0]}</li>
+                <li className="weather-state">{props.desc[0]}</li>
                 <li>Feels like: {(props.desc[1]).toFixed(0)}°</li>
                 <li>Humidity: {props.desc[2]}%</li>
                 <li>Wind: {props.desc[3]} m/s</li>

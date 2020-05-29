@@ -36,10 +36,10 @@ function changeAppLang(e) {
   }
 }
 
-function Controls() {
+function Controls(props) {
     return (
           <div className="controls">
-            <div className="change-image">
+            <div className="change-image" onClick={props.changeImg}>
               <FontAwesomeIcon icon={faSyncAlt} className="rotate-icon"/>
             </div>
             <div className="change-lang" onClick={revealList}>

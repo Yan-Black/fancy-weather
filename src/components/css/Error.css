@@ -1,0 +1,24 @@
+* {
+    box-sizing: border-box;
+}
+
+.error-block {
+    height: 45px;
+    background-color: rgba(255, 255, 255, 0.2);
+    transition: .3s ease-in-out;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1vw;
+}
+
+.error-hidden {
+    visibility: hidden;
+}
+
+.error {
+    color: #fff;
+    font-size: 1.2vw;
+    text-transform: lowercase;
+}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import Clock from 'react-live-clock';
+import Error from './components/Error';
 import Controls from './components/Controls';
+import Clock from './components/Clock';
 import SearchBar from './components/Search';
 import LocationBlock from './components/Location';
 import WeatherBlock from './components/Weather';
@@ -13,66 +14,97 @@ function App() {
   const [weather, setWeather] = useState({});
   const [forecast, setForecast] = useState({});
   const [image, setImage] = useState({});
+  const [latitude, setLat] = useState(0);
+  const [longtitude, setLon] = useState(0);
 
-  const search = evt => {
-    if (evt.key === 'Enter') {
+  function search (e) {
+    if (e.key === 'Enter' || e.target.className === "search-but") {
       getWeatherData();
       getForecast();
       getBackImage();
     }
   }
 
-  function getWeatherData() {
-    fetch(`${WEATHER_API.base}weather?q=${query}&units=metric&appid=${WEATHER_API.key}`)
-      .then(res => res.json())
+  function getWeatherData(idCity) {
+    hideError()
+    fetch(`${WEATHER_API.base}weather?q=${query || idCity}&units=metric&appid=${WEATHER_API.key}`)
+      .then(res => res.ok ? res.json() : Promise.reject(res))
       .then(result => {
+        console.log(result);
         setWeather(result);
+        setLon(result.coord.lon);
+        setLat(result.coord.lat);
+        getBackImage();
         setQuery('');
-    });
+    })
+    .catch(() => {
+      showError('City was not found');
+    })
   }
 
-  function getForecast() {
-    fetch(`${WEATHER_API.base}forecast?q=${query}&units=metric&appid=${WEATHER_API.key}`)
-      .then(res => res.json())
+  function getForecast(idCity) {
+    fetch(`${WEATHER_API.base}forecast?q=${query || idCity}&units=metric&appid=${WEATHER_API.key}`)
+      .then(res => res.ok ? res.json() : Promise.reject(res))
       .then(result => {
         setForecast(result);
-    });
+    })
+    .catch()
   }
 
   function getBackImage() {
-    fetch(`${BACKGROUND_API.base}/random?orientation=landscape&per_page=1&query=nature&client_id=${BACKGROUND_API.key}`)
-      .then(res => res.json())
+    hideError()
+    const loader = document.querySelector('.rotate-icon');
+    const weatherState = document.querySelector('.weather-state');
+    loader.classList.add('load-image');
+    fetch(`${BACKGROUND_API.base}/random?orientation=landscape&per_page=1&featured=nature&query=${weatherState.innerText}&client_id=${BACKGROUND_API.key}`)
+      .then(res => res.ok ? res.json() : Promise.reject(res))
       .then(result => { 
-        setImage(result.urls.full)
+        loader.classList.remove('load-image');
+        setImage(result.urls.full);
       })
+      .catch(() => {
+        setImage('./assets/images/background.jpg');
+        loader.classList.remove('load-image');
+      });
   }
 
   function getUserLocation() {
     fetch(`${ID_API.base}json?token=${ID_API.key}`)
-      .then(res => res.json())
+      .then(res => res.ok ? res.json() : Promise.reject(res))
       .then(result => { 
-        fetch(`${WEATHER_API.base}weather?q=${query || result.city}&units=metric&appid=${WEATHER_API.key}`)
-        .then(res => res.json())
-        .then(result => {
-          setWeather(result);
-          setQuery('');
-      });
-      fetch(`${WEATHER_API.base}forecast?q=${query || result.city}&units=metric&appid=${WEATHER_API.key}`)
-        .then(res => res.json())
-        .then(result => {
-          setForecast(result);
-    });  
+        getWeatherData(result.city);
+        getForecast(result.city);
       })
+      .catch()
+  }
+
+  function showError(err) {
+    const errorBlock = document.querySelector('.error-block');
+    const errorMessage = document.querySelector('.error');
+    errorMessage.innerText = err;
+    errorBlock.classList.remove('error-hidden');
+  }
+  
+  function hideError() {
+    const errorBlock = document.querySelector('.error-block');
+    const errorMessage = document.querySelector('.error');
+    if (!errorBlock.classList.contains('error-hidden')) {
+      errorBlock.classList.add('error-hidden');
+    }
+    errorMessage.innerText = '';
   }
 
   useEffect(getUserLocation, []);
-  useEffect(getBackImage, []);
-  
+  // useEffect(() => {
+  //   MapBlock.render()
+  // }, [weather.coord.lon, weather.coord.lat]);
+
    return (
     <div className="App" style={{ backgroundImage: `url(${image})` }}>
       <main>
         <div className="header">
-          <Controls />
+          <Controls changeImg={getBackImage}/>
+          <Error />
           <SearchBar fn={setQuery} query={query} search={search}/>
         </div>
         {(typeof weather.main !== 'undefined') ? (
@@ -86,9 +118,9 @@ function App() {
                       <h2 className="date">{dateBuilder(new Date())}</h2>
                     </div>
                   </div>
-                  <div className="clock">
-                    <Clock format={'HH:mm:ss'} ticking={true} timezone={`${weather.sys.country}/${weather.name}`} />
-                  </div>
+                  {weather.timezone ? (
+                    <Clock timeZone={weather.timezone} />
+                  ) : (null)}
                 </div>
                 <WeatherBlock 
                   temp={weather.main.temp}
@@ -134,7 +166,9 @@ function App() {
                   />
                 ) : ('')}
               </div>
-                <MapBlock lng={weather.coord.lon} lat={weather.coord.lat} />
+              {(longtitude && latitude && weather.name) ? (
+                <MapBlock lng={longtitude} lat={latitude} setLon={setLon} setLat={setLat} name={weather.name}/>
+              ) : null}
             </div>
           </div>
         ) : ('')}
