@@ -33,7 +33,7 @@
 }
 
 .load-image {
-    animation: .3s spin infinite linear;
+    animation: .6s spin infinite linear;
 }
 
 @keyframes spin {

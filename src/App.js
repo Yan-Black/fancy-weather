@@ -7,7 +7,7 @@ import LocationBlock from './components/Location';
 import WeatherBlock from './components/Weather';
 import ForecastBlock from './components/Forecast';
 import MapBlock from './components/Map';
-// import LazyBackgroundLoader from './components/LazyImage';
+import Preloader from './components/Preloader';
 import { getName, ID_API, WEATHER_API, BACKGROUND_API, dateBuilder } from './base/constants';
 
 function App() {
@@ -34,7 +34,7 @@ function App() {
       .then(result => {
         setWeather(result);
         setLon(result.coord.lon);
-        setLat(result.coord.lat);
+        setLat(result.coord.lat); 
         getBackImage();
         setQuery('');
     })
@@ -54,16 +54,17 @@ function App() {
 
   function getBackImage() {
     hideError()
-    const loader = document.querySelector('.rotate-icon');
+    const spinner = document.querySelector('.rotate-icon');
+    const loader = document.querySelector('.preloader');
     const weatherState = document.querySelector('.weather-state');
-    loader.classList.add('load-image');
+    spinner.classList.add('load-image');
     fetch(`${BACKGROUND_API.base}/random?orientation=landscape&per_page=1&featured=nature&query=${weatherState.innerText}&client_id=${BACKGROUND_API.key}`)
       .then(res => res.ok ? res.json() : Promise.reject(res))
       .then(result => { 
-        LazyBackgroundLoader(result.urls.full, loader);
+        LazyBackgroundLoader(result.urls.full, spinner, loader);
       })
       .catch(() => {
-        loader.classList.remove('load-image');
+        spinner.classList.remove('load-image');
       });
   }
 
@@ -93,21 +94,30 @@ function App() {
     errorMessage.innerText = '';
   }
 
-  function LazyBackgroundLoader(src, elem) {  
+  function LazyBackgroundLoader(src, spinner, loader) {  
       const img = new Image();
       img.src = src;
       img.onload = () => {
         setSourceLoaded(src);
-        elem.classList.remove('load-image');
+        spinner.classList.remove('load-image');
+        if(loader) {
+          setTimeout(() => {
+            loader.classList.add('preloader-fade-out');
+          }, 800); 
+          setTimeout(() => {
+            loader.remove();
+          }, 1300); 
+        }
       }; 
       img.onerror = () => setSourceLoaded(placeholder);      
-}
+  }
 
   useEffect(getUserLocation, []);
 
    return (
     <div className="App" style={{ backgroundImage: `url(${sourceLoaded ? sourceLoaded : placeholder})` }} >
       <main>
+        <Preloader />
         <div className="header">
           <Controls changeImg={getBackImage}/>
           <Error />
