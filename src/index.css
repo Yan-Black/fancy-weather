@@ -48,16 +48,6 @@ main {
   border-radius: 5px;
 }
 
-.date {
-  font-size: 4vw;
-  text-transform: uppercase;
-  color: #fff;
-}
-
-.date {
-  font-size: 2vw;
-}
-
 .weather-header {
   display: flex;
   justify-content: space-between;

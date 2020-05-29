@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Error from './components/Error';
 import Controls from './components/Controls';
+import RegionDate from './components/Date';
 import Clock from './components/Clock';
 import SearchBar from './components/Search';
 import LocationBlock from './components/Location';
@@ -8,7 +9,7 @@ import WeatherBlock from './components/Weather';
 import ForecastBlock from './components/Forecast';
 import MapBlock from './components/Map';
 import Preloader from './components/Preloader';
-import { getName, ID_API, WEATHER_API, BACKGROUND_API, dateBuilder } from './base/constants';
+import { getName, ID_API, WEATHER_API, BACKGROUND_API, setNewBackImage } from './base/constants';
 
 function App() {
   const [query, setQuery] = useState('');
@@ -17,7 +18,7 @@ function App() {
   const [latitude, setLat] = useState(0);
   const [longtitude, setLon] = useState(0);
   const [sourceLoaded, setSourceLoaded] = useState(null);
-  const placeholder = './assets/images/background.jpg';
+  const placeholder = 'C:/Users/Olga/Desktop/fancy weather/react simple example/weather-react/src/assets/images/background.jpg';
 
   function search (e) {
     if (e.key === 'Enter' || e.target.className === "search-but") {
@@ -64,7 +65,9 @@ function App() {
         LazyBackgroundLoader(result.urls.full, spinner, loader);
       })
       .catch(() => {
+        showError('image request limit exceeded');
         spinner.classList.remove('load-image');
+        LazyBackgroundLoader(placeholder, spinner, loader);
       });
   }
 
@@ -98,18 +101,12 @@ function App() {
       const img = new Image();
       img.src = src;
       img.onload = () => {
-        setSourceLoaded(src);
+        setNewBackImage(setSourceLoaded, src, loader)
         spinner.classList.remove('load-image');
-        if(loader) {
-          setTimeout(() => {
-            loader.classList.add('preloader-fade-out');
-          }, 800); 
-          setTimeout(() => {
-            loader.remove();
-          }, 1300); 
-        }
       }; 
-      img.onerror = () => setSourceLoaded(placeholder);      
+      img.onerror = () => {
+        setNewBackImage(setSourceLoaded, placeholder, loader)
+      };      
   }
 
   useEffect(getUserLocation, []);
@@ -130,9 +127,9 @@ function App() {
                 <div className="weather-header">
                   <div className="location">
                       <LocationBlock city={weather.name} country={getName(weather.sys.country)} />
-                    <div className="date-block">
-                      <h2 className="date">{dateBuilder(new Date())}</h2>
-                    </div>
+                      {weather.timezone ? (
+                        <RegionDate timeZone={weather.timezone} />
+                      ) : (null)}
                   </div>
                   {weather.timezone ? (
                     <Clock timeZone={weather.timezone} />

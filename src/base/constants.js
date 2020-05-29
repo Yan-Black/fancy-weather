@@ -13,10 +13,15 @@ export const BACKGROUND_API = {
   key: 'a96vjeJorduF_JUfRtLii9qY2b8-tX3cZG0T_Si10W0',
   base: 'https://api.unsplash.com/photos/'
 };
-export const dateBuilder = (d) => {
-  const day = days[d.getDay()];
-  const date = d.getDate();
-  const month = months[d.getMonth()];
-  const year = d.getFullYear();
-  return `${day} ${date} ${month} ${year}`;
-};
+
+export const setNewBackImage = (fn, src, loader) => {
+  fn(src);
+  if(loader) {
+    setTimeout(() => {
+      loader.classList.add('preloader-fade-out');
+    }, 800); 
+    setTimeout(() => {
+      loader.remove();
+    }, 1300); 
+  }
+} 

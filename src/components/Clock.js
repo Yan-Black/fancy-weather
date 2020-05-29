@@ -16,7 +16,7 @@ function Clock(props) {
         setDate(new Date());
     }
 
-    function logLocaleTime() {
+    function showLocaleTime() {
         const utcOffset = (props.timeZone / 60) / 60;
         const utc = date.getTime() + (date.getTimezoneOffset() * 60000);
         const regionDate = new Date(utc + (3600000 * utcOffset));
@@ -26,7 +26,7 @@ function Clock(props) {
 
     return(
         <div className="clock">
-            <span>{ logLocaleTime() }</span>
+            <span>{ showLocaleTime() }</span>
         </div>
     );
 }
