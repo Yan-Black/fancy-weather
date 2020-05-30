@@ -1,9 +1,11 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDown, faSyncAlt } from '@fortawesome/free-solid-svg-icons';
-import { changeUnits, translationsToEng, translationsToRu, translationsToBel, changeAppLang } from '../base/constants';
-import { daysBel, daysEng, daysRu, monthsBel, monthsRu, monthsEng } from '../base/constants';
+import { changeUnits, changeAppLang } from '../base/functionalConstants';
 import { weatherCodesBel, weatherCodesRu, weatherCodesEng } from '../base/weatherCodes';
+import { translationsToEng, translationsToRu, translationsToBel } from '../base/translateConstants';
+import { daysBel, daysEng, daysRu, monthsBel, monthsRu, monthsEng } from '../base/translateConstants';
+import { daysFullBel, daysFullEng, daysFullRu } from '../base/translateConstants';
 import './css/Controls.css';
 
 function revealList() {
@@ -43,25 +45,25 @@ function selectLang(e) {
     case 'RU':
       appLang.innerText = 'RU';
       input.placeholder = 'Поиск...';
-      changeAppLang(translationsToRu, weatherCodesRu, daysRu, monthsRu, e.target.innerText);
+      changeAppLang(translationsToRu, weatherCodesRu, daysRu, monthsRu, e.target.innerText, daysFullRu);
       localStorage.setItem('lang', ru);
       break;
     case 'EN':
       appLang.innerText = 'EN';
       input.placeholder = 'Search...';
-      changeAppLang(translationsToEng, weatherCodesEng, daysEng, monthsEng, e.target.innerText);
+      changeAppLang(translationsToEng, weatherCodesEng, daysEng, monthsEng, e.target.innerText, daysFullEng);
       localStorage.setItem('lang', en);
       break;
     case 'BE':
       appLang.innerText = 'BE';
       input.placeholder = 'Пошук...';
-      changeAppLang(translationsToBel, weatherCodesBel, daysBel, monthsBel, 'be');
+      changeAppLang(translationsToBel, weatherCodesBel, daysBel, monthsBel, 'be', daysFullBel);
       localStorage.setItem('lang', be);
       break;
     default:
       appLang.innerText = 'EN';
       input.placeholder = 'Search...';
-      changeAppLang(translationsToEng, weatherCodesEng, daysEng, monthsEng, e.target.innerText);
+      changeAppLang(translationsToEng, weatherCodesEng, daysEng, monthsEng, e.target.innerText, daysFullEng);
       localStorage.setItem('lang', en);
       break;
   }

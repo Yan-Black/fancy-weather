@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { chooseDaysMonthArray } from '../base/constants';
+import { chooseDaysMonthArray } from '../base/functionalConstants';
 import './css/Forecast.css';
 
 function ForeacstBlock(props) {

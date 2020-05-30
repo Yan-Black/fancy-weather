@@ -1,43 +1,5 @@
-export const monthsEng = [
-  'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December',
-  'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
-];
-export const daysEng = [
-  'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat',
-  'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat',
-];
-export const monthsRu = [
-  'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь',
-  'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
-];
-export const daysRu = [
-  'Вск', 'Пнд', 'Втр', 'Срд', 'Чтв', 'Птн', 'Сбт',
-  'Вск', 'Пнд', 'Втр', 'Срд', 'Чтв', 'Птн', 'Сбт',
-];
-export const monthsBel = [
-  'Студзень', 'Люты', 'Сакавiк', 'Красавiк', 'Май', 'Червень', 'Лiпень', 'Жнiвень', 'Верасень', 'Кастрычнiк', 'Лiстапад', 'Снежань',
-  'Студзень', 'Люты', 'Сакавiк', 'Красавiк', 'Май', 'Червень', 'Лiпень', 'Жнiвень', 'Верасень', 'Кастрычнiк', 'Лiстапад', 'Снежань'
-];
-export const daysBel = [
-  'Няд', 'Пнд', 'Аўт', 'Сер', 'Чцв', 'Пят', 'Суб',
-  'Няд', 'Пнд', 'Аўт', 'Сер', 'Чцв', 'Пят', 'Суб',
-];
-export const ID_API ={
-  key: '465144289736aa',
-  base: 'https://ipinfo.io/'
-}
-export const WEATHER_API = {
-  key: 'ca2af16f2e06c1e0b367014ae6b14e53',
-  base: 'https://api.openweathermap.org/data/2.5/'
-}
-export const BACKGROUND_API = {
-  key: 'a96vjeJorduF_JUfRtLii9qY2b8-tX3cZG0T_Si10W0',
-  base: 'https://api.unsplash.com/photos/'
-}
-export const TRANSLATE_API = {
-  key: 'trnsl.1.1.20200506T082702Z.aac0a5a6e2461b41.433078d322a3ca6678f569df72150ce9a6f96114',
-  base: 'https://translate.yandex.net/api/v1.5/'
-}
+import { daysBel, daysEng, daysRu } from './translateConstants';
+import { TRANSLATE_API } from './apiConstants';
 
 export const setNewBackImage = (fn, src, loader) => {
   fn(src);
@@ -54,16 +16,16 @@ export const setNewBackImage = (fn, src, loader) => {
 export const currentDayState = (val) => {
   let state;
   switch (val) {
-    case val >= 6 && val <= 12:
+    case val >= 7 && val <= 11:
       state = 'morning';
       break;
-    case val > 12 && val <= 18:
+    case val >= 12 && val <= 17:
       state = 'day';
       break;
-    case val > 18 <= 24:
+    case val >= 18 && val <= 23:
       state = 'evening';
       break;
-    case val >= 0 && val < 6:
+    case val >= 24 && val <= 6:
       state = 'night';
       break;
     default:
@@ -169,48 +131,18 @@ export const setActiveLangFromStorage = () => {
   }
 }
 
-export const translationsToEng = {
-  feelsLike: 'feels like: ',
-  humidity: 'humidity: ',
-  wind: 'wind: ',
-  search: 'search',
-  ms: 'm/s',
-  latitude: 'Latitude:',
-  longtitude: 'Longtitude:'
-}
-
-export const translationsToRu = {
-  feelsLike: 'ощущается как: ',
-  humidity: 'влажность: ',
-  wind: 'ветер: ',
-  search: 'поиск',
-  ms: 'м/с',
-  latitude: 'Долгота:',
-  longtitude: 'Широта:'
-}
-
-export const translationsToBel = {
-  feelsLike: 'адчуваецца як: ',
-  humidity: 'вiльготнасць: ',
-  wind: 'вецер: ',
-  search: 'пошук',
-  ms: 'м/с',
-  latitude: 'Даўгата:',
-  longtitude: 'Шырата:'
-}
-
-export const changeAppLang = (dict, codes, days, months, lang) => {
+export const changeAppLang = (dict, codes, days, months, lang, fullDays) => {
   const elemsToTranslate = document.querySelectorAll('[data-i18n]');
   const daysToTranslate = document.querySelectorAll('[data-forecast]');
   const city = document.querySelector('.city');
   const country = document.querySelector('.country');
-  daysToTranslate.forEach((elem, i) => {
+  daysToTranslate.forEach((_, i) => {
     daysToTranslate[i].innerText = days[new Date().getDay() + i];
   })
   elemsToTranslate.forEach((elem) => {
       elem.innerText = dict[elem.getAttribute('data-i18n')] || codes[elem.getAttribute('data-i18n')];
       if (elem.getAttribute('data-i18n') === 'day') {
-        elem.innerText = `${days[new Date().getDay()]} `;
+        elem.innerText = `${fullDays[new Date().getDay()]} `;
       }
       if (elem.getAttribute('data-i18n') === 'month') {
         elem.innerText = `${months[new Date().getMonth()]} `;
@@ -251,5 +183,19 @@ let daysArr
   return daysArr;
 }
 
+export const showError = err => {
+  const errorBlock = document.querySelector('.error-block');
+  const errorMessage = document.querySelector('.error');
+  errorMessage.innerText = err;
+  errorBlock.classList.remove('error-hidden');
+}
 
+export const hideError = () => {
+  const errorBlock = document.querySelector('.error-block');
+  const errorMessage = document.querySelector('.error');
+  if (!errorBlock.classList.contains('error-hidden')) {
+    errorBlock.classList.add('error-hidden');
+  }
+  errorMessage.innerText = '';
+}
 

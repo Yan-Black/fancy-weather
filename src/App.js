@@ -9,8 +9,11 @@ import WeatherBlock from './components/Weather';
 import ForecastBlock from './components/Forecast';
 import MapBlock from './components/Map';
 import Preloader from './components/Preloader';
-import { ID_API, WEATHER_API, BACKGROUND_API, TRANSLATE_API, setNewBackImage, defineCurrentUnits } from './base/constants';
-import { setActiveUnitsButtonFromStorage, setActiveLangFromStorage, currentDayState, currentWeatherPeriod } from './base/constants';
+import { ID_API, WEATHER_API, TRANSLATE_API } from './base/apiConstants';
+import { BACKGROUND_API } from './base/apiConstants';
+import { setNewBackImage, defineCurrentUnits } from './base/functionalConstants';
+import { setActiveUnitsButtonFromStorage, setActiveLangFromStorage, currentDayState, currentWeatherPeriod } from './base/functionalConstants';
+import { showError, hideError } from './base/functionalConstants';
 
 function App() {
   const [query, setQuery] = useState('');
@@ -29,21 +32,41 @@ function App() {
 
   function search (e) {
     if (e.key === 'Enter' || e.target.className === "search-but") {
-      const fButton = document.querySelector('.change-f');
-      getWeatherData(query, defineCurrentUnits(fButton));
-      getForecast(query, defineCurrentUnits(fButton));
       geoLocation(query);
     }
   }
 
-  function getWeatherData(idCity, units) {
+  function getUserLocation() {
+    fetch(`${ID_API.base}json?token=${ID_API.key}`)
+      .then(res => res.ok ? res.json() : Promise.reject(res))
+      .then(result => { 
+        setActiveUnitsButtonFromStorage();
+        setActiveLangFromStorage();
+        geoLocation(result.city);
+      })
+      .catch();
+  }
+
+  function geoLocation(idCity) {
+    const fButton = document.querySelector('.change-f');
+    fetch(`https://api.opencagedata.com/geocode/v1/json?q=${query || idCity}&key=0558628d9eba4dc98e9177e831c36e9d&pretty=1&no_annotations=1`)
+    .then(res => res.ok ? res.json() : Promise.reject(res))
+    .then(res => {
+      getWeatherData(res.results[0].geometry.lat, res.results[0].geometry.lng, defineCurrentUnits(fButton));
+      getForecast(res.results[0].geometry.lat, res.results[0].geometry.lng, defineCurrentUnits(fButton));
+      setLon(res.results[0].geometry.lng);
+      setLat(res.results[0].geometry.lat);
+      translateApiData(res.results[0].components.country, setCountryName); 
+    })
+    .catch();
+  }
+
+  function getWeatherData(lat, lon, units) {
     hideError()
-    fetch(`${WEATHER_API.base}weather?q=${query || idCity}&units=${units}&appid=${WEATHER_API.key}`)
+    fetch(`${WEATHER_API.base}weather?lat=${lat}&lon=${lon}&units=${units}&appid=${WEATHER_API.key}`)
       .then(res => res.ok ? res.json() : Promise.reject(res))
       .then(result => {
         setWeather(result);
-        setLon(result.coord.lon);
-        setLat(result.coord.lat);
         getBackImage(result.name, result.weather[0].main);
         setQuery('');
         setPictureDesc(result.weather[0].main);
@@ -80,8 +103,8 @@ function App() {
     })
 }
 
-  function getForecast(idCity, units) {
-    fetch(`${WEATHER_API.base}forecast?q=${query || idCity}&units=${units}&appid=${WEATHER_API.key}`)
+  function getForecast(lat, lon, units) {
+    fetch(`${WEATHER_API.base}forecast?lat=${lat}&lon=${lon}&units=${units}&appid=${WEATHER_API.key}`)
       .then(res => res.ok ? res.json() : Promise.reject(res))
       .then(result => {
         setForecast(result);
@@ -96,7 +119,7 @@ function App() {
     const timeString = document.querySelector('.region-date').innerText;
     const dayTime = parseInt(timeString.slice(0,2));
     spinner.classList.add('load-image'); 
-    fetch(`${BACKGROUND_API.base}/random?orientation=landscape&per_page=1&featured=nature&query=${pictureDescription || desc},${pictureCity || city},${currentWeatherPeriod(new Date().getMonth())}&client_id=${BACKGROUND_API.key}`)
+    fetch(`${BACKGROUND_API.base}/random?orientation=landscape&per_page=1&featured=nature&query=${pictureDescription || desc},${pictureCity || city}&client_id=${BACKGROUND_API.key}`)
       .then(res => res.ok ? res.json() : Promise.reject(res))
       .then(result => { 
         LazyBackgroundLoader(result.urls.full, spinner, loader);
@@ -119,36 +142,6 @@ function App() {
         spinner.classList.remove('load-image');
         LazyBackgroundLoader(placeholder, spinner, loader);
       });
-  }
-
-  function getUserLocation() {
-    const fButton = document.querySelector('.change-f');
-    fetch(`${ID_API.base}json?token=${ID_API.key}`)
-      .then(res => res.ok ? res.json() : Promise.reject(res))
-      .then(result => { 
-        setActiveUnitsButtonFromStorage();
-        setActiveLangFromStorage();
-        getWeatherData(result.city, defineCurrentUnits(fButton));
-        getForecast(result.city, defineCurrentUnits(fButton));
-        geoLocation(result.city);
-      })
-      .catch()
-  }
-
-  function showError(err) {
-    const errorBlock = document.querySelector('.error-block');
-    const errorMessage = document.querySelector('.error');
-    errorMessage.innerText = err;
-    errorBlock.classList.remove('error-hidden');
-  }
-  
-  function hideError() {
-    const errorBlock = document.querySelector('.error-block');
-    const errorMessage = document.querySelector('.error');
-    if (!errorBlock.classList.contains('error-hidden')) {
-      errorBlock.classList.add('error-hidden');
-    }
-    errorMessage.innerText = '';
   }
 
   function LazyBackgroundLoader(src, spinner, loader) {  
@@ -179,16 +172,6 @@ function App() {
         langMenu.classList.add('hidden-list');
       };      
   }
-function geoLocation(idCity) {
-  fetch(`https://api.opencagedata.com/geocode/v1/json?q=${query || idCity}&key=0558628d9eba4dc98e9177e831c36e9d&pretty=1&no_annotations=1`)
-  .then(res => res.json())
-  .then(res => {
-    console.log(res);
-    
-    translateApiData(res.results[0].components.country, setCountryName); 
-  })
-}
-
 
   useEffect(getUserLocation, []);
 

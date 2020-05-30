@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { daysEng, monthsEng, daysRu, monthsRu, daysBel, monthsBel } from '../base/constants';
+import { daysRu, daysBel, daysEng, monthsEng, monthsRu, monthsBel } from '../base/translateConstants';
 import './css/Date.css';
 
 const lang = localStorage.getItem('lang');
