@@ -1,6 +1,3 @@
-import { locale } from 'moment-timezone';
-
-export const { getName } = require('country-list');
 export const monthsEng = [
   'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December',
   'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
@@ -75,6 +72,27 @@ export const currentDayState = (val) => {
   return state;
 }
 
+export const currentWeatherPeriod = (val) => {
+  let period;
+  switch (val) {
+    case val >= 12 && val <= 2:
+      period = 'winter';
+      break;
+    case val >= 3 && val <= 5:
+      period = 'spring';
+      break;
+    case val >= 6 && val <= 8:
+      period = 'summer';
+      break;
+    case val >= 9 && val <= 11:
+      period = 'autumn';
+      break;
+    default:
+      period = 'summer';
+  }
+  return period;
+}
+
 export const changeUnits = (elem) => {
 
   const mainTemp = document.querySelector('.main-temp');
@@ -143,7 +161,7 @@ export const setActiveLangFromStorage = () => {
       appLang.innerText = 'EN';
       break;
     case 'be':
-      appLang.innerText = 'BY';
+      appLang.innerText = 'BE';
       break;
     default:
       appLang.innerText = 'EN';

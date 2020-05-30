@@ -52,8 +52,8 @@ function selectLang(e) {
       changeAppLang(translationsToEng, weatherCodesEng, daysEng, monthsEng, e.target.innerText);
       localStorage.setItem('lang', en);
       break;
-    case 'BY':
-      appLang.innerText = 'BY';
+    case 'BE':
+      appLang.innerText = 'BE';
       input.placeholder = 'Пошук...';
       changeAppLang(translationsToBel, weatherCodesBel, daysBel, monthsBel, 'be');
       localStorage.setItem('lang', be);
@@ -79,7 +79,7 @@ function Controls(props) {
               <ul className="lang-list hidden-list" onClick={selectLang}>
                 <li className="lang-selector">RU</li>
                 <li className="lang-selector">EN</li>
-                <li className="lang-selector">BY</li>
+                <li className="lang-selector">BE</li>
               </ul>
             </div>
             <div className="change-units">
