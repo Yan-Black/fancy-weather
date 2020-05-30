@@ -31,3 +31,7 @@
     line-height: 1.5;
     font-size: 1vw;
 }
+
+.mapboxgl-control-container {
+    display: none;
+  }

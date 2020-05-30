@@ -26,7 +26,7 @@ function Clock(props) {
 
     return(
         <div className="clock">
-            <span>{ showLocaleTime() }</span>
+            <span className="region-date">{ showLocaleTime() }</span>
         </div>
     );
 }

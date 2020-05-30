@@ -1,6 +1,9 @@
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleDown, faSyncAlt } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAngleDown, faSyncAlt } from '@fortawesome/free-solid-svg-icons';
+import { changeUnits, translationsToEng, translationsToRu, translationsToBel, changeAppLang } from '../base/constants';
+import { daysBel, daysEng, daysRu, monthsBel, monthsRu, monthsEng } from '../base/constants';
+import { weatherCodesBel, weatherCodesRu, weatherCodesEng } from '../base/weatherCodes';
 import './css/Controls.css';
 
 function revealList() {
@@ -9,6 +12,7 @@ function revealList() {
 }
 
 function changeActiveButton(e) {
+  saveUnitsFormat(e);
   const fButton = document.querySelector('.change-f');
   const cButton = document.querySelector('.change-c');
   if(e.target.classList.contains('active-but')) {
@@ -16,22 +20,49 @@ function changeActiveButton(e) {
   }
   fButton.classList.toggle('active-but');
   cButton.classList.toggle('active-but');
+  changeUnits(fButton);
 }
 
-function changeAppLang(e) {
+function saveUnitsFormat(e) {
+  const imperial = 'imerial';
+  const metric = 'metric';
+  if (e.target.className === 'change-f') {
+      localStorage.setItem('units', imperial);
+  } else {
+    localStorage.setItem('units', metric);
+  }
+}
+
+function selectLang(e) {
   const appLang = document.querySelector('.app-lang');
+  const input = document.querySelector('.search-bar');
+  const ru = 'ru';
+  const en = 'en';
+  const be = 'be';
   switch(e.target.innerText) {
     case 'RU':
       appLang.innerText = 'RU';
+      input.placeholder = 'Поиск...';
+      changeAppLang(translationsToRu, weatherCodesRu, daysRu, monthsRu, e.target.innerText);
+      localStorage.setItem('lang', ru);
       break;
     case 'EN':
       appLang.innerText = 'EN';
+      input.placeholder = 'Search...';
+      changeAppLang(translationsToEng, weatherCodesEng, daysEng, monthsEng, e.target.innerText);
+      localStorage.setItem('lang', en);
       break;
     case 'BY':
       appLang.innerText = 'BY';
+      input.placeholder = 'Пошук...';
+      changeAppLang(translationsToBel, weatherCodesBel, daysBel, monthsBel, 'be');
+      localStorage.setItem('lang', be);
       break;
     default:
       appLang.innerText = 'EN';
+      input.placeholder = 'Search...';
+      changeAppLang(translationsToEng, weatherCodesEng, daysEng, monthsEng, e.target.innerText);
+      localStorage.setItem('lang', en);
       break;
   }
 }
@@ -45,10 +76,10 @@ function Controls(props) {
             <div className="change-lang" onClick={revealList}>
               <p className="app-lang">EN</p>
               <FontAwesomeIcon icon={faAngleDown} />
-              <ul className="lang-list hidden-list" onClick={changeAppLang}>
-                <li className="RU">RU</li>
-                <li className="EN">EN</li>
-                <li className="BY">BY</li>
+              <ul className="lang-list hidden-list" onClick={selectLang}>
+                <li className="lang-selector">RU</li>
+                <li className="lang-selector">EN</li>
+                <li className="lang-selector">BY</li>
               </ul>
             </div>
             <div className="change-units">

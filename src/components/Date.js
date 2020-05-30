@@ -1,6 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { days, months } from '../base/constants';
+import { daysEng, monthsEng, daysRu, monthsRu, daysBel, monthsBel } from '../base/constants';
 import './css/Date.css';
+
+const lang = localStorage.getItem('lang');
+let daysArr, monthsArr;
+
+switch(lang) {
+    case 'ru':
+        daysArr = daysRu;
+        monthsArr = monthsRu;
+        break;
+    case 'en':
+        daysArr = daysEng;
+        monthsArr = monthsEng;
+        break;
+    case 'be':
+        daysArr = daysBel;
+        monthsArr = monthsBel;
+        break;
+    default:
+        daysArr = daysEng;
+        monthsArr = monthsEng;
+        break;
+}
 
 function RegionDate(props) {
     const [date, setDate] = useState(new Date());
@@ -17,17 +39,21 @@ function RegionDate(props) {
         const utcOffset = (props.timeZone / 60) / 60;
         const utc = date.getTime() + (date.getTimezoneOffset() * 60000);
         const regionDate = new Date(utc + (3600000 * utcOffset));
-        const day = days[regionDate.getDay()];
-        const dateZone = regionDate.getDate();
-        const month = months[regionDate.getMonth()];
+        const day = daysArr[regionDate.getDay()];
+        const dateNum = regionDate.getDate();
+        const month = monthsArr[regionDate.getMonth()];
         const year = regionDate.getFullYear();
         
-        return `${day} ${dateZone} ${month} ${year}`;
+        return  (
+            <>
+            <span data-i18n="day">{day}&nbsp;</span><span>{dateNum}&nbsp;</span><span data-i18n="month">{month}&nbsp;</span><span>{year}</span>
+            </>
+        );
     }
 
     return(
         <div className="date-block">
-            <span>{ showLocaleDate() }</span>
+            { showLocaleDate() }
         </div>
     );
 }

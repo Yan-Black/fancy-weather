@@ -45,9 +45,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 1vw;
 }
 
 .description-list {
+    width: max-content;
     list-style: none;
     color: #fff;
     text-transform: uppercase;

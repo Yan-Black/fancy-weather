@@ -24,7 +24,12 @@ function MapBlock({ lat: latitude, lng: longtitude, setLon, setLat, name }) {
         map.on("load", () => {
               setMap(map);
               map.resize();
-              map.easeTo({center: [longtitude, latitude]})
+              map.flyTo({
+                center: [longtitude, latitude],
+                speed: 2,
+                curve: 1,
+                essential: true
+                });
             });
 
         map.on('move', () => {
@@ -40,8 +45,8 @@ function MapBlock({ lat: latitude, lng: longtitude, setLon, setLat, name }) {
         <div className="map-section">
             <div ref={el => (mapContainer.current = el)} className='mapContainer' />
             <div className="map-coords">
-                <p className="prop">Latitude:  {latitude}</p>
-                <p className="prop">Longitude: {longtitude}</p>
+                <p className="prop"><span data-i18n="latitude">Latitude:</span>&nbsp;{latitude}</p>
+                <p className="prop"><span data-i18n="longtitude">Longitude:</span>&nbsp;{longtitude}</p>
             </div>
         </div>
     );

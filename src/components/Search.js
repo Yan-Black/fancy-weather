@@ -13,7 +13,7 @@ function SearchBar(props) {
             <button className="mic">
                 <FontAwesomeIcon icon={faMicrophone} className="mic-icon"/>
             </button>
-            <button className="search-but" onClick={props.search}>Search</button>
+            <button data-i18n="search" className="search-but" onClick={props.search}>Search</button>
         </div>
     );
 }
