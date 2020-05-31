@@ -24,7 +24,7 @@ function MapBlock({ lat: latitude, lng: longtitude, setLon, setLat, name }) {
         map.on("load", () => {
               setMap(map);
               map.resize();
-              map.flyTo({
+              map.jumpTo({
                 center: [longtitude, latitude],
                 speed: 2,
                 curve: 1,

@@ -1,33 +1,33 @@
 import React from 'react';
-import { cloudy } from '../assets/images/animated/cloudy.svg';
-import { cloudyDayOne } from '../assets/images/animated/cloudy.svg';
-import { cloudyNightOne } from '../assets/images/animated/cloudy.svg';
-import { day } from '../assets/images/animated/cloudy.svg';
-import { night } from '../assets/images/animated/cloudy.svg';
-import { rainyThree } from '../assets/images/animated/cloudy.svg';
-import { rainyFive } from '../assets/images/animated/cloudy.svg';
-import { rainySix } from '../assets/images/animated/cloudy.svg';
-import { snowySix } from '../assets/images/animated/cloudy.svg';
-import { thunder } from '../assets/images/animated/cloudy.svg';
+import cloudy from '../assets/images/animated/cloudy.svg';
+import cloudyDayOne from '../assets/images/animated/cloudy-day-1.svg';
+import cloudyNightOne from '../assets/images/animated/cloudy-night-1.svg';
+import day from '../assets/images/animated/day.svg';
+import night from '../assets/images/animated/night.svg';
+import rainyThree from '../assets/images/animated/rainy-3.svg';
+import rainyFive from '../assets/images/animated/rainy-5.svg';
+import rainySix from '../assets/images/animated/rainy-6.svg';
+import snowySix from '../assets/images/animated/snowy-6.svg';
+import thunder from '../assets/images/animated/thunder.svg';
 
-export const weatherConditionsIcons = new Map();
-weatherConditionsIcons.set('01d', day);
-weatherConditionsIcons.set('02d', cloudyDayOne);
-weatherConditionsIcons.set('03d', cloudy);
-weatherConditionsIcons.set('04d', cloudy);
-weatherConditionsIcons.set('09d', rainyFive);
-weatherConditionsIcons.set('10d', rainyThree);
-weatherConditionsIcons.set('11d', thunder);
-weatherConditionsIcons.set('13d', snowySix);
-weatherConditionsIcons.set('50d', cloudy);
-weatherConditionsIcons.set('01n', night);
-weatherConditionsIcons.set('02n', cloudy);
-weatherConditionsIcons.set('03n', cloudy);
-weatherConditionsIcons.set('04n', cloudyNightOne);
-weatherConditionsIcons.set('09n', rainyFive);
-weatherConditionsIcons.set('10n', rainySix);
-weatherConditionsIcons.set('11n', thunder);
-weatherConditionsIcons.set('13n', snowySix);
-weatherConditionsIcons.set('50n', cloudy);
-
-
+export const weatherConditionsIcons = {
+    '01d': day,
+    '02d': cloudyDayOne,
+    '03d': cloudy,
+    '04d': cloudy,
+    '09d': rainyFive,
+    '10d': rainyThree,
+    '11d': thunder,
+    '13d': snowySix,
+    '50d': cloudy,
+    '01n': night,
+    '02n': cloudy,
+    '03n': cloudy,
+    '04n': cloudyNightOne,
+    '09n': rainyFive,
+    '10n': rainySix,
+    '11n': thunder,
+    '13n': snowySix,
+    '50n': cloudy
+}
+    

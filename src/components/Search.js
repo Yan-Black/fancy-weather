@@ -36,12 +36,11 @@ function SearchBar(props) {
 
     recognition.onresult = (e) => {
         const { resultIndex } = e;
-        const input = document.getElementById('searcher');
+        const but = document.querySelector('.search-but');
         const tscript = e.results[resultIndex][0].transcript;
-        console.log(tscript);
-        
-        input.value = tscript;
+        props.fn(tscript);
         toggleSpeechRecorder();
+        but.click();
     }
 
     function toggleSpeechRecorder() {

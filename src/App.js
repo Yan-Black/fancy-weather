@@ -9,15 +9,12 @@ import WeatherBlock from './components/Weather';
 import ForecastBlock from './components/Forecast';
 import MapBlock from './components/Map';
 import Preloader from './components/Preloader';
-// import placeholder from '../src/assets/images/backgroung.jpg';
+import placeholder from './assets/images/background.jpg';
 import { ID_API, WEATHER_API, TRANSLATE_API, GEOLOCATION_API } from './base/apiConstants';
 import { BACKGROUND_API } from './base/apiConstants';
 import { setNewBackImage, defineCurrentUnits } from './base/functionalConstants';
 import { setActiveUnitsButtonFromStorage, setActiveLangFromStorage, currentDayState, currentWeatherPeriod } from './base/functionalConstants';
 import { showError, hideError, handleLocationRequestError, handleImageRequestError } from './base/functionalConstants';
-import { daysBel } from './base/translateConstants';
-
-const placeholder = '';
 
 function App() {
   const [query, setQuery] = useState('');
@@ -31,8 +28,6 @@ function App() {
   const [weatherDescription, setWeatherDesc] = useState('');
   const [pictureDescription, setPictureDesc] = useState('');
   const [pictureCity, setPictureCity] = useState('');
-  // const [backSrc, setBackSrc] = useState('');
-  // const [isLoaded, setLoaded] = useState(false);
 
   function search (e) {
     if (e.key === 'Enter' || e.target.className === "search-but") {
@@ -56,8 +51,6 @@ function App() {
     fetch(`${GEOLOCATION_API.base}json?q=${query || idCity}&key=${GEOLOCATION_API.key}&pretty=1&no_annotations=1`)
     .then(res => res.ok ? res.json() : Promise.reject(res))
     .then(res => {
-      console.log('1');
-      
       getWeatherData(res.results[0].geometry.lat, res.results[0].geometry.lng, defineCurrentUnits(fButton));
       getForecast(res.results[0].geometry.lat, res.results[0].geometry.lng, defineCurrentUnits(fButton));
       setLon(res.results[0].geometry.lng);
@@ -114,12 +107,10 @@ function App() {
     const timeString = document.querySelector('.region-date').innerText;
     const dayTime = parseInt(timeString.slice(0,2));
     spinner.classList.add('load-image'); 
-    console.log(`запрос бекграунда: ${BACKGROUND_API.base}/random?orientation=landscape&per_page=1&featured=nature&query=${pictureDescription || desc},${pictureCity || city},${currentWeatherPeriod(new Date().getMonth())}&client_id=${BACKGROUND_API.key}`);
-    
-    fetch(`${BACKGROUND_API.base}/random?orientation=landscape&per_page=1&featured=nature&query=${pictureDescription || desc},${pictureCity || city},${currentWeatherPeriod(new Date().getMonth())}&client_id=${BACKGROUND_API.key}`)
+    console.log(`запрос бекграунда: ${BACKGROUND_API.base}/random?orientation=landscape&per_page=1&featured=nature&query=${pictureDescription || desc},${pictureCity || city},${currentWeatherPeriod(new Date().getMonth())},${currentDayState(dayTime)}&client_id=${BACKGROUND_API.key}`);
+    fetch(`${BACKGROUND_API.base}/random?orientation=landscape&per_page=1&featured=nature&query=${pictureDescription || desc},${pictureCity || city},${currentWeatherPeriod(new Date().getMonth())},${currentDayState(dayTime)}&client_id=${BACKGROUND_API.key}`)
       .then(res => res.ok ? res.json() : Promise.reject(res))
       .then(result => {
-        // setBackSrc(result.urls.full);
         LazyBackgroundLoader(result.urls.full, spinner, loader);
       })
       .catch(() => {
@@ -135,7 +126,6 @@ function App() {
       const langMenu = document.querySelector('.lang-list');
       const appLang = document.querySelector('.app-lang');
       img.src = src;
-      // img.onload = loaded();
       img.onload = () => {
         setNewBackImage(setSourceLoaded, src, loader)
         spinner.classList.remove('load-image');
@@ -156,23 +146,7 @@ function App() {
         langMenu.classList.add('hidden-list');
       };      
   }
-  // function loaded() {
-  //   const langSelector = document.querySelectorAll('.lang-selector');
-  //   const langMenu = document.querySelector('.lang-list');
-  //   const appLang = document.querySelector('.app-lang');
-  //   const spinner = document.querySelector('.rotate-icon');
-  //   const loader = document.querySelector('.preloader');
-  //   setNewBackImage(setSourceLoaded, backSrc, loader)
-  //   spinner.classList.remove('load-image');
-  //   langSelector.forEach(selector => {
-  //     if (selector.innerText === appLang.innerText) {
-  //       // selector.click();
-  //     } 
-  //   });
-  //   setLoaded(true);
-  //   langMenu.classList.add('hidden-list');
-  // }
-  // useEffect(loaded, [backSrc]);
+
   useEffect(getUserLocation, []);
 
    return (
@@ -203,7 +177,7 @@ function App() {
                   <WeatherBlock 
                   cod={weather.weather[0].id}
                   temp={weather.main.temp}
-                  src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@4x.png`}
+                  src={weather.weather[0].icon}
                   desc={
                     [
                       weatherDescription,
@@ -227,11 +201,11 @@ function App() {
                     }
                     src={
                       [
-                        `http://openweathermap.org/img/wn/${forecast.list[1].weather[0].icon}@2x.png`,
-                        `http://openweathermap.org/img/wn/${forecast.list[9].weather[0].icon}@2x.png`,
-                        `http://openweathermap.org/img/wn/${forecast.list[17].weather[0].icon}@2x.png`,
-                        `http://openweathermap.org/img/wn/${forecast.list[25].weather[0].icon}@2x.png`,
-                        `http://openweathermap.org/img/wn/${forecast.list[33].weather[0].icon}@2x.png`
+                        forecast.list[1].weather[0].icon,
+                        forecast.list[9].weather[0].icon,
+                        forecast.list[17].weather[0].icon,
+                        forecast.list[25].weather[0].icon,
+                        forecast.list[33].weather[0].icon
                       ]
                     }
                   />

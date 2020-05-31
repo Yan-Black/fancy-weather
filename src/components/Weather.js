@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-// import { weatherConditionsIcons } from '../base/weatherIcons';
+import { weatherConditionsIcons } from '../base/weatherIcons';
 import './css/Weather.css';
 
 function WeatherBlock(props) {
@@ -13,10 +13,10 @@ function WeatherBlock(props) {
         <div className="weather-area">
             <div className="current-temp">
                 <p className="main-temp">{temp.toFixed(0) + '°'}</p>
-                <img className="mobile-icon" src={props.src} alt=""/>
+                <img className="mobile-icon" src={weatherConditionsIcons[props.src]} alt=""/>
             </div>
             <div className="current-icon">
-                <img className="weather-icon" src={props.src} alt=""/>
+                <img className="weather-icon" src={weatherConditionsIcons[props.src]} alt=""/>
             </div>
             <div className="current-description">
             <ul className="description-list">
