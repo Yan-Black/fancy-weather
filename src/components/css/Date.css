@@ -3,3 +3,11 @@
     text-transform: uppercase;
     color: #fff;
   }
+  
+  @media (max-width: 450px) {
+    .date-block {
+      font-size: 5vw;
+      text-align: center;
+      margin-bottom: 4vw;
+    }
+  }

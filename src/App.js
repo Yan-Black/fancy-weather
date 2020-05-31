@@ -13,7 +13,7 @@ import { ID_API, WEATHER_API, TRANSLATE_API } from './base/apiConstants';
 import { BACKGROUND_API } from './base/apiConstants';
 import { setNewBackImage, defineCurrentUnits } from './base/functionalConstants';
 import { setActiveUnitsButtonFromStorage, setActiveLangFromStorage, currentDayState, currentWeatherPeriod } from './base/functionalConstants';
-import { showError, hideError } from './base/functionalConstants';
+import { showError, hideError, handleLocationRequestError, handleImageRequestError } from './base/functionalConstants';
 
 function App() {
   const [query, setQuery] = useState('');
@@ -27,8 +27,14 @@ function App() {
   const [weatherDescription, setWeatherDesc] = useState('');
   const [pictureDescription, setPictureDesc] = useState('');
   const [pictureCity, setPictureCity] = useState('');
-  // const [isLoaded, setLoaded] = useState(false);
   const placeholder = './assets/images/background.jpg';
+  // const [isLoaded, setLoaded] = useState(false);
+
+  // function checkIfIsloaded() {
+  //   if (pictureCity) {
+  //     setLoaded(true)
+  //   }
+  // }
 
   function search (e) {
     if (e.key === 'Enter' || e.target.className === "search-but") {
@@ -58,7 +64,9 @@ function App() {
       setLat(res.results[0].geometry.lat);
       translateApiData(res.results[0].components.country, setCountryName); 
     })
-    .catch();
+    .catch(() => {
+      handleLocationRequestError(showError);
+    })
   }
 
   function getWeatherData(lat, lon, units) {
@@ -75,20 +83,7 @@ function App() {
         translateApiData(result.weather[0].description, setWeatherDesc); 
     })
     .catch(() => {
-      switch(localStorage.getItem('lang')) {
-        case 'be':
-          showError('Горад не найдзены');
-          break;
-        case 'ru':
-          showError('Город не найден');
-          break;
-        case 'en':
-          showError('City was not found');
-          break;
-        default:
-          showError('City was not found');
-          break;
-      }
+      handleLocationRequestError(showError);
     })
   }
 
@@ -125,20 +120,7 @@ function App() {
         LazyBackgroundLoader(result.urls.full, spinner, loader);
       })
       .catch(() => {
-        switch(localStorage.getItem('lang')) {
-          case 'be':
-            showError('Перавышаны ліміт запытаў малюнка');
-            break;
-          case 'ru':
-            showError('Превышен лимит запросов изображения');
-            break;
-          case 'en':
-            showError('image request limit exceeded');
-            break;
-          default:
-            showError('image request limit exceeded');
-            break;
-        }
+        handleImageRequestError(showError)
         spinner.classList.remove('load-image');
         LazyBackgroundLoader(placeholder, spinner, loader);
       });
@@ -159,9 +141,7 @@ function App() {
           } 
         });
         langMenu.classList.add('hidden-list');
-        // setLoaded(true);
       }; 
-      // useEffect(img.onload,[src])
       img.onerror = () => {
         setNewBackImage(setSourceLoaded, placeholder, loader);
         langSelector.forEach(selector => {
@@ -172,7 +152,7 @@ function App() {
         langMenu.classList.add('hidden-list');
       };      
   }
-
+  // useEffect(checkIfIsloaded, [pictureCity]);
   useEffect(getUserLocation, []);
 
    return (

@@ -105,3 +105,18 @@
 .lang-list > li:hover {
     background-color: rgba(27, 27, 27, 0.7);
 }
+
+@media (max-width: 450px) {
+    .controls {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .change-f, .change-c {
+        font-size: 4vw;
+    }
+
+    .change-image, .change-lang, .change-units {
+        margin-right: 5vw;
+    }
+}

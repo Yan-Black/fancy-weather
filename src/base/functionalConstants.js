@@ -199,3 +199,37 @@ export const hideError = () => {
   errorMessage.innerText = '';
 }
 
+export const handleLocationRequestError = (fn) => {
+  switch(localStorage.getItem('lang')) {
+    case 'be':
+      fn('Горад не найдзены');
+      break;
+    case 'ru':
+      fn('Город не найден');
+      break;
+    case 'en':
+      fn('City was not found');
+      break;
+    default:
+      fn('City was not found');
+      break;
+  }
+}
+
+export const handleImageRequestError = (fn) => {
+  switch(localStorage.getItem('lang')) {
+    case 'be':
+      showError('Перавышаны ліміт запытаў малюнка');
+      break;
+    case 'ru':
+      showError('Превышен лимит запросов изображения');
+      break;
+    case 'en':
+      showError('image request limit exceeded');
+      break;
+    default:
+      showError('image request limit exceeded');
+      break;
+  }
+}
+

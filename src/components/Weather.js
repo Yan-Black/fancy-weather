@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+// import { weatherConditionsIcons } from '../base/weatherIcons';
 import './css/Weather.css';
 
 function WeatherBlock(props) {
@@ -7,6 +8,7 @@ function WeatherBlock(props) {
     function updateTemp() {
         setTemp(props.temp);
     }
+    
     return(
         <div className="weather-area">
             <div className="current-temp">

@@ -35,3 +35,44 @@
     width: 100%;
     height: auto;
 }
+
+@media (max-width: 1024px) {
+    .day {
+        font-size: 1.7vw;
+    }
+
+    .temp-val {
+        font-size: 2vw;
+    }
+}
+
+
+@media (max-width: 450px) {
+    .forecast {
+        flex-direction: column;
+    }
+
+    .forecast-info {
+        padding: 5vw 0;
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 5px;
+        margin-bottom: 4vw;
+    }
+
+    .forecast-icon {
+        width: 100%;
+        height: auto;
+    }
+
+    .day {
+        font-size: 5vw;
+    }
+
+    .temp-val {
+        font-size: 5vw;
+    }
+
+    .forecast-info:nth-child(4), .forecast-info:nth-child(5) {
+        display: none;
+    }
+}

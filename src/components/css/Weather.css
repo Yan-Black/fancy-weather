@@ -55,3 +55,49 @@
     text-transform: uppercase;
     font-size: 1.5vw;
 }
+
+@media (max-width: 1024px) {
+    .main-temp {
+        font-size: 16vw;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-temp {
+        font-size: 20vw;
+    }
+
+    .description-list {
+        font-size: 2.5vw;
+    }
+}
+
+@media (max-width: 450px) {
+    .current-temp {
+        width: 100%;
+        margin-bottom: 4vw;
+    }
+
+    .main-temp {
+        font-size: 50vw;
+    }
+
+    .weather-area {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .current-icon {
+        display: none;
+    }
+
+    .current-description {
+        width: 100%;
+        margin-bottom: 4vw;
+    }
+
+    .description-list {
+        padding: 5vw 0;
+        font-size: 6vw;
+    }
+}

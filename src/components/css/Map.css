@@ -35,3 +35,40 @@
 .mapboxgl-control-container {
     display: none;
   }
+
+  @media (max-width: 1024px) {
+    .map-section {
+        margin-top: 5vw;
+        width: 80%;
+        height: 40vw;
+    }
+
+    .prop {
+        font-size: 1.5vw;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .map-section {
+      width: 100%;
+      height: 50vw;
+    }
+
+    .prop {
+        font-size: 2vw;
+    }
+  }
+
+  @media (max-width: 450px) {
+      .map-section {
+          height: 150vw;
+      }
+
+      .prop {
+        font-size: 5vw;
+    }
+
+      .map-coords {
+        padding: 3vw 2vw;
+    }
+  }
