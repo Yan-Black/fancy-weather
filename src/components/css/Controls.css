@@ -106,6 +106,12 @@
     background-color: rgba(27, 27, 27, 0.7);
 }
 
+@media (max-width: 768px) {
+    .change-f, .change-c {
+        font-size: 3vw;
+    }
+}
+
 @media (max-width: 450px) {
     .controls {
         width: 100%;

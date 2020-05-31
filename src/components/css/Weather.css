@@ -38,6 +38,11 @@
     height: auto;
 }
 
+.mobile-icon {
+    position: absolute;
+    display: none;
+}
+
 .current-description {
     width: 39%;
     background-color: rgba(255, 255, 255, 0.2);
@@ -76,10 +81,13 @@
     .current-temp {
         width: 100%;
         margin-bottom: 4vw;
+        position: relative;
+        overflow: hidden;
     }
 
     .main-temp {
         font-size: 50vw;
+        z-index: 1;
     }
 
     .weather-area {
@@ -89,6 +97,12 @@
 
     .current-icon {
         display: none;
+    }
+
+    .mobile-icon {
+        display: block;
+        opacity: .4;
+        left: 50%;
     }
 
     .current-description {

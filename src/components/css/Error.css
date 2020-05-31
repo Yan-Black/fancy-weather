@@ -2,7 +2,7 @@
     box-sizing: border-box;
 }
 
-.error-block {
+.error-block, .pad-error {
     height: 45px;
     background-color: rgba(255, 255, 255, 0.2);
     transition: .3s ease-in-out;
@@ -21,4 +21,34 @@
     color: #fff;
     font-size: 1.2vw;
     text-transform: lowercase;
+}
+
+@media (max-width: 1024px) {
+    .error-block {
+        background: none;
+        position: absolute;
+        top: 8.5vw;
+        left: 45vw;
+    }
+
+    .error {
+        font-size: 3vw;
+    }
+}
+
+@media (max-width: 450px) {
+    .error-block {
+        background: none;
+        position: static;
+    }
+
+    .error {
+        font-size: 4vw;
+    }
+}
+
+@media (max-width: 320px) {
+    .error {
+        font-size: 5vw;
+    }
 }

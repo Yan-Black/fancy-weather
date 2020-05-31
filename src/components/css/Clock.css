@@ -17,6 +17,12 @@
     align-items: center;
 }
 
+@media (max-width: 768px) {
+    .clock {
+        width: 44%;
+    }
+}
+
 @media (max-width: 450px) {
     .clock {
         width: 100%;

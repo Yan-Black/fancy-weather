@@ -13,6 +13,7 @@ function WeatherBlock(props) {
         <div className="weather-area">
             <div className="current-temp">
                 <p className="main-temp">{temp.toFixed(0) + '°'}</p>
+                <img className="mobile-icon" src={props.src} alt=""/>
             </div>
             <div className="current-icon">
                 <img className="weather-icon" src={props.src} alt=""/>

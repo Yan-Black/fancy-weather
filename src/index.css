@@ -9,6 +9,9 @@ body {
 }
 
 .App {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   background-size: cover;
   background-position: bottom;
   transition: .4s ease-in-out;
