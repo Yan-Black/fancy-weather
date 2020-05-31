@@ -160,6 +160,9 @@ function translateLocation(elem, lang) {
     const translate = text.join('');
     elem.innerText = translate;
   })
+  .catch(() => {
+    showError('invalid translate request');
+  })
 }
 
 export const chooseDaysMonthArray = () => {

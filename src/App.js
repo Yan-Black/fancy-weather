@@ -89,6 +89,9 @@ function App() {
       const translate = text[0];
       fn(translate);
     })
+    .catch(() => {
+      showError('invalid translate request');
+    });
 }
 
   function getForecast(lat, lon, units) {
