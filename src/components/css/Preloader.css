@@ -21,23 +21,24 @@
     height: 20vw;
     border-radius: 5px;
     padding: 1vw;
-    background-color: rgba(255, 255, 255, 0.2);
 }
 
 .preloader-image {
     background-image: url('C:/Users/Olga/Desktop/fancy weather/react simple example/weather-react/src/assets/images/loader.png');
-    width: 5vw;
-    height: 5vw;
+    background-repeat: no-repeat;
+    filter: drop-shadow(0 0 2vw rgba(0, 77, 100, 0.5));
+    width: 15vw;
+    height: 15vw;
     margin-top: 1vw;
     background-size: contain;
-    animation: 1s spinner infinite linear;
+    animation: 3s spinner infinite linear;
 }
 
 @keyframes spinner {
     from {
-        transform: rotate(0);
+        transform: rotateY(0);
     } to {
-        transform: rotate(360deg);
+        transform: rotateY(360deg);
     }
 }
 
@@ -50,5 +51,19 @@
         opacity: 1;
     } to {
         opacity: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .preloader-image {
+        width: 20vw;
+        height: 20vw;
+    }
+}
+
+@media (max-width: 450px) {
+    .preloader-image {
+        width: 40vw;
+        height: 40vw;
     }
 }

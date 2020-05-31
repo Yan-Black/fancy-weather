@@ -6,10 +6,29 @@ import { faMicrophone } from '@fortawesome/free-solid-svg-icons';
 function SearchBar(props) {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     const recognition = new SpeechRecognition();
-    const [tscript, setTscript] = useState('');
+    const [lang, setLang] = useState('en-US');
 
-    recognition.lang = 'en-US';
+    useEffect(updateLang, [props.lang]);
 
+    function updateLang() {
+        switch(props.lang) {
+            case 'BE':
+                setLang('ru-RU');
+                break;
+            case 'EN':
+                setLang('en-US');
+                break;
+            case 'RU':
+                setLang('ru-RU');
+                break;
+            default:
+                setLang('en-US');
+        }
+    }
+
+
+    recognition.lang = lang;
+    
     recognition.onstart = () => {
         const input = document.getElementById('searcher');
         input.value = '';
@@ -18,7 +37,9 @@ function SearchBar(props) {
     recognition.onresult = (e) => {
         const { resultIndex } = e;
         const input = document.getElementById('searcher');
-        setTscript(e.results[resultIndex][0].transcript);
+        const tscript = e.results[resultIndex][0].transcript;
+        console.log(tscript);
+        
         input.value = tscript;
         toggleSpeechRecorder();
     }
@@ -42,7 +63,7 @@ function SearchBar(props) {
             <button className="mic">
                 <FontAwesomeIcon icon={faMicrophone} onClick={toggleSpeechRecorder}className="mic-icon"/>
             </button>
-            <button data-i18n="search" className="search-but" onClick={props.search || tscript}>Search</button>
+            <button data-i18n="search" className="search-but" onClick={props.search}>Search</button>
         </div>
     );
 }

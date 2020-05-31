@@ -3,7 +3,7 @@ export const translationsToEng = {
     humidity: 'humidity: ',
     wind: 'wind: ',
     search: 'search',
-    ms: 'm/s',
+    ms: ' m/s',
     latitude: 'Latitude:',
     longtitude: 'Longtitude:'
   }
@@ -13,7 +13,7 @@ export const translationsToRu = {
     humidity: 'влажность: ',
     wind: 'ветер: ',
     search: 'поиск',
-    ms: 'м/с',
+    ms: ' м/с',
     latitude: 'Долгота:',
     longtitude: 'Широта:'
   }
@@ -23,7 +23,7 @@ export const translationsToBel = {
     humidity: 'вiльготнасць: ',
     wind: 'вецер: ',
     search: 'пошук',
-    ms: 'м/с',
+    ms: ' м/с',
     latitude: 'Даўгата:',
     longtitude: 'Шырата:'
   }

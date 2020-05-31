@@ -13,6 +13,7 @@
     outline: none;
     user-select: none;
     transition: .2s ease-in-out;
+    z-index: 3;
 }
 
 .change-image {
