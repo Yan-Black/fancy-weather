@@ -15,6 +15,7 @@ import { BACKGROUND_API } from './base/apiConstants';
 import { setNewBackImage, defineCurrentUnits } from './base/functionalConstants';
 import { setActiveUnitsButtonFromStorage, setActiveLangFromStorage, currentDayState, currentWeatherPeriod } from './base/functionalConstants';
 import { showError, hideError, handleLocationRequestError, handleImageRequestError } from './base/functionalConstants';
+import { daysBel } from './base/translateConstants';
 
 const placeholder = '';
 
@@ -113,7 +114,9 @@ function App() {
     const timeString = document.querySelector('.region-date').innerText;
     const dayTime = parseInt(timeString.slice(0,2));
     spinner.classList.add('load-image'); 
-    fetch(`${BACKGROUND_API.base}/random?orientation=landscape&per_page=1&featured=nature&query=${pictureDescription || desc},${pictureCity || city}&client_id=${BACKGROUND_API.key}`)
+    console.log(`запрос бекграунда: ${BACKGROUND_API.base}/random?orientation=landscape&per_page=1&featured=nature&query=${pictureDescription || desc},${pictureCity || city},${currentWeatherPeriod(new Date().getMonth())}&client_id=${BACKGROUND_API.key}`);
+    
+    fetch(`${BACKGROUND_API.base}/random?orientation=landscape&per_page=1&featured=nature&query=${pictureDescription || desc},${pictureCity || city},${currentWeatherPeriod(new Date().getMonth())}&client_id=${BACKGROUND_API.key}`)
       .then(res => res.ok ? res.json() : Promise.reject(res))
       .then(result => {
         // setBackSrc(result.urls.full);

@@ -30,6 +30,9 @@ function MapBlock({ lat: latitude, lng: longtitude, setLon, setLat, name }) {
                 curve: 1,
                 essential: true
                 });
+              new mapboxgl.Marker() 
+              .setLngLat([longtitude, latitude]) 
+              .addTo(map)
             });
 
         map.on('move', () => {
