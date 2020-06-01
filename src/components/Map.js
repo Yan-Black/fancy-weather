@@ -20,13 +20,12 @@ function MapBlock({ lat: latitude, lng: longtitude, setLon, setLat, name }) {
           center: [longtitude, latitude],
           zoom,
         });
-
         map.on("load", () => {
               setMap(map);
               map.resize();
-              map.jumpTo({
+              map.flyTo({
                 center: [longtitude, latitude],
-                speed: 2,
+                speed: 1,
                 curve: 1,
                 essential: true
                 });

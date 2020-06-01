@@ -8,7 +8,11 @@ function WeatherBlock(props) {
     function updateTemp() {
         setTemp(props.temp);
     }
-    
+    const [descTemp, setDescTemp] = useState(props.desc[1]);
+    useEffect(updateDescTemp,[props.desc[1]]);
+    function updateDescTemp() {
+        setDescTemp(props.desc[1]);
+    }
     return(
         <div className="weather-area">
             <div className="current-temp">
@@ -21,7 +25,7 @@ function WeatherBlock(props) {
             <div className="current-description">
             <ul className="description-list">
                 <li data-i18n={props.cod} className="weather-state">{props.desc[0]}</li>
-                <li><span data-i18n="feelsLike">Feels like: </span>{(props.desc[1]).toFixed(0)}°</li>
+                <li><span data-i18n="feelsLike">Feels like: </span><span  className="description-temp">{(descTemp).toFixed(0) + '°'}</span></li>
                 <li><span data-i18n="humidity">Humidity: </span>{props.desc[2]}%</li>
                 <li><span data-i18n="wind">Wind: </span>{props.desc[3]}<span data-i18n="ms">&nbsp;m/s</span></li>
                 </ul>
