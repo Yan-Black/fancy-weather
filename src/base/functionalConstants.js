@@ -1,14 +1,14 @@
 import { daysBel, daysEng, daysRu } from './translateConstants';
 import { TRANSLATE_API } from './apiConstants';
 
-export const setNewBackImage = (fn, src, loader) => {
+export const setNewBackImage = (fn, src, preloader) => {
   fn(src);
-  if(loader) {
+  if(preloader) {
     setTimeout(() => {
-      loader.classList.add('preloader-fade-out');
+      preloader.classList.add('preloader-fade-out');
     }, 800); 
     setTimeout(() => {
-      loader.remove();
+      preloader.remove();
     }, 1300); 
   }
 } 
@@ -134,7 +134,7 @@ export const setActiveLangFromStorage = () => {
   }
 }
 
-export const changeAppLang = (dict, codes, days, months, lang, fullDays) => {
+export const changeAppLang = (dict, codes, days, months, lang) => {
   const elemsToTranslate = document.querySelectorAll('[data-i18n]');
   const daysToTranslate = document.querySelectorAll('[data-forecast]');
   const city = document.querySelector('.city');
@@ -145,7 +145,7 @@ export const changeAppLang = (dict, codes, days, months, lang, fullDays) => {
   elemsToTranslate.forEach((elem) => {
       elem.innerText = dict[elem.getAttribute('data-i18n')] || codes[elem.getAttribute('data-i18n')];
       if (elem.getAttribute('data-i18n') === 'day') {
-        elem.innerText = `${fullDays[new Date().getDay()]} `;
+        elem.innerText = `${days[new Date().getDay()]} `;
       }
       if (elem.getAttribute('data-i18n') === 'month') {
         elem.innerText = `${months[new Date().getMonth()]} `;
@@ -239,3 +239,23 @@ export const handleImageRequestError = (fn) => {
   }
 }
 
+export const readForecast = (lang) => {
+  const temp = document.querySelector('.main-temp').innerText;
+  const description = document.querySelector('.weather-state').innerText;
+  const feelsLike = document.querySelector('.description-temp').innerText;
+  const humidity = document.querySelector('.humidity').innerText;
+  const wind = document.querySelector('.wind').innerText;
+  const synth = window.speechSynthesis;
+  const ruForecast = `Сегодня ${temp}, ${description}, ощущается как ${feelsLike}, влажность ${humidity}, скорость ветра ${wind} метров в секунду`;
+  const enForecast = `Today is ${temp}, ${description}, feels like ${feelsLike}, humidity is ${humidity}, wind speed is  ${wind} meters in a second`;
+  if (lang === 'en-US') {
+    const phrase = new SpeechSynthesisUtterance(enForecast);
+    phrase.lang = lang;
+    synth.speak(phrase);
+  }
+  if (lang === 'ru-RU') {
+    const phrase = new SpeechSynthesisUtterance(ruForecast);
+    phrase.lang = lang;
+    synth.speak(phrase);
+  }
+}

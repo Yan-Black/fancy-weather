@@ -1,4 +1,3 @@
-import React from 'react';
 import cloudy from '../assets/images/animated/cloudy.svg';
 import cloudyDayOne from '../assets/images/animated/cloudy-day-1.svg';
 import cloudyNightOne from '../assets/images/animated/cloudy-night-1.svg';

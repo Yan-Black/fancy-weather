@@ -27,33 +27,18 @@ export const translationsToBel = {
     latitude: 'Даўгата:',
     longtitude: 'Шырата:'
   }
-
+  
   export const daysEng = [
-    'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat',
-    'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat',
-  ];
-
-  export const daysRu = [
-    'Вск', 'Пнд', 'Втр', 'Срд', 'Чтв', 'Птн', 'Сбт',
-    'Вск', 'Пнд', 'Втр', 'Срд', 'Чтв', 'Птн', 'Сбт',
-  ];
-
-  export const daysBel = [
-    'Няд', 'Пнд', 'Аўт', 'Сер', 'Чцв', 'Пят', 'Суб',
-    'Няд', 'Пнд', 'Аўт', 'Сер', 'Чцв', 'Пят', 'Суб',
-  ];
-
-  export const daysFullEng = [
     'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday',
     'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
   ];
 
-  export const daysFullRu = [
+  export const daysRu = [
     'Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота',
     'Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'
   ];
   
-  export const daysFullBel = [
+  export const daysBel = [
     'Нядзеля', 'Панядзелак', 'Аўторак', 'Серада', 'Чацвер', 'Пятнiца', 'Субота',
     'Нядзеля', 'Панядзелак', 'Аўторак', 'Серада', 'Чацвер', 'Пятнiца', 'Субота'
   ];

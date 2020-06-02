@@ -26,8 +26,8 @@ function WeatherBlock(props) {
             <ul className="description-list">
                 <li data-i18n={props.cod} className="weather-state">{props.desc[0]}</li>
                 <li><span data-i18n="feelsLike">Feels like: </span><span  className="description-temp">{(descTemp).toFixed(0) + '°'}</span></li>
-                <li><span data-i18n="humidity">Humidity: </span>{props.desc[2]}%</li>
-                <li><span data-i18n="wind">Wind: </span>{props.desc[3]}<span data-i18n="ms">&nbsp;m/s</span></li>
+                <li><span data-i18n="humidity">Humidity: </span><span className="humidity">{props.desc[2]}%</span></li>
+                <li><span data-i18n="wind">Wind: </span><span className="wind">{props.desc[3]}</span><span data-i18n="ms">&nbsp;m/s</span></li>
                 </ul>
             </div>
         </div>

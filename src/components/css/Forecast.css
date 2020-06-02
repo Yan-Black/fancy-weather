@@ -17,6 +17,10 @@
     text-transform: uppercase;
 }
 
+.day {
+    font-size: 0.9vw;
+}
+
 .forecast-info {
     display: flex;
     flex-direction: column;

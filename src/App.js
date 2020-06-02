@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Error from './components/Error';
 import Controls from './components/Controls';
-import RegionDate from './components/Date';
-import Clock from './components/Clock';
 import SearchBar from './components/Search';
-import LocationBlock from './components/Location';
-import WeatherBlock from './components/Weather';
-import ForecastBlock from './components/Forecast';
-import MapBlock from './components/Map';
 import Preloader from './components/Preloader';
 import placeholder from './assets/images/background.jpg';
 import { ID_API, WEATHER_API, TRANSLATE_API, GEOLOCATION_API } from './base/apiConstants';
@@ -15,6 +9,7 @@ import { BACKGROUND_API } from './base/apiConstants';
 import { setNewBackImage, defineCurrentUnits } from './base/functionalConstants';
 import { setActiveUnitsButtonFromStorage, setActiveLangFromStorage, currentDayState, currentWeatherPeriod } from './base/functionalConstants';
 import { showError, hideError, handleLocationRequestError, handleImageRequestError } from './base/functionalConstants';
+import Main from './components/Main';
 
 function App() {
   const [query, setQuery] = useState('');
@@ -107,11 +102,9 @@ function App() {
     hideError()
     const spinner = document.querySelector('.rotate-icon');
     const loader = document.querySelector('.preloader');
-    const timeString = document.querySelector('.region-date').innerText;
-    const dayTime = parseInt(timeString.slice(0,2));
     spinner.classList.add('load-image'); 
-    console.log(`запрос бекграунда: ${BACKGROUND_API.base}/random?orientation=landscape&per_page=1&featured=nature&query=${pictureDescription || desc},${pictureCity || city},${currentWeatherPeriod(new Date().getMonth())},${currentDayState(dayTime)}&client_id=${BACKGROUND_API.key}`);
-    fetch(`${BACKGROUND_API.base}/random?orientation=landscape&per_page=1&featured=nature&query=${pictureDescription || desc},${pictureCity || city},${currentWeatherPeriod(new Date().getMonth())},${currentDayState(dayTime)}&client_id=${BACKGROUND_API.key}`)
+    console.log(`запрос бекграунда: ${BACKGROUND_API.base}/random?orientation=landscape&per_page=1&featured=nature&query=${pictureDescription || desc},${pictureCity || city},${currentWeatherPeriod(new Date().getMonth())},${currentDayState(new Date().getHours())}&client_id=${BACKGROUND_API.key}`);
+    fetch(`${BACKGROUND_API.base}/random?orientation=landscape&per_page=1&featured=nature&query=${pictureDescription || desc},${pictureCity || city},${currentWeatherPeriod(new Date().getMonth())},${currentDayState(new Date().getHours())}&client_id=${BACKGROUND_API.key}`)
       .then(res => res.ok ? res.json() : Promise.reject(res))
       .then(result => {
         LazyBackgroundLoader(result.urls.full, spinner, loader);
@@ -161,64 +154,16 @@ function App() {
           <Error />
           <SearchBar fn={setQuery} query={query} search={search} lang={localStorage.getItem('lang')}/>
         </div>
-        {weather.main ? (
-          <div>
-            <div className="weather-section">
-              <div className="weather-block">
-                <div className="weather-header">
-                  <div className="location">
-                      <LocationBlock city={cityName} country={countryName} />
-                      {weather.timezone ? (
-                        <RegionDate timeZone={weather.timezone} />
-                      ) : (null)}
-                  </div>
-                  {weather.timezone ? (
-                    <Clock timeZone={weather.timezone} />
-                  ) : (null)}
-                </div>
-                {(weather.main.temp) ? (
-                  <WeatherBlock 
-                  cod={weather.weather[0].id}
-                  temp={weather.main.temp}
-                  src={weather.weather[0].icon}
-                  desc={
-                    [
-                      weatherDescription,
-                      weather.main.feels_like,
-                      weather.main.humidity,
-                      weather.wind.speed
-                    ]
-                  }
-                />
-                ) : (null)}
-                {(typeof forecast.list !== 'undefined') ? (
-                  <ForecastBlock 
-                    temp={
-                      [
-                        forecast.list[1].main.temp,
-                        forecast.list[9].main.temp,
-                        forecast.list[17].main.temp,
-                        forecast.list[25].main.temp,
-                        forecast.list[33].main.temp
-                      ]
-                    }
-                    src={
-                      [
-                        forecast.list[1].weather[0].icon,
-                        forecast.list[9].weather[0].icon,
-                        forecast.list[17].weather[0].icon,
-                        forecast.list[25].weather[0].icon,
-                        forecast.list[33].weather[0].icon
-                      ]
-                    }
-                  />
-                ) : (null)}
-              </div>
-              {(longtitude && latitude && weather.name) ? (
-                <MapBlock lng={longtitude} lat={latitude} setLon={setLon} setLat={setLat} name={weather.name}/>
-              ) : null}
-            </div>
-          </div>
+        {weather.main && cityName && countryName && forecast.list && longtitude && latitude ? (
+          <Main weather={weather} 
+                city={cityName} 
+                country={countryName} 
+                weatherDescription={weatherDescription} 
+                forecast={forecast} lng={longtitude} 
+                lat={latitude} 
+                setLon={setLon} 
+                setLat={setLat} 
+              />
         ) : (null)}
       </main>
     </div>

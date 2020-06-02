@@ -2,23 +2,27 @@ import React, { useState, useEffect } from 'react';
 import './css/Search.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMicrophone } from '@fortawesome/free-solid-svg-icons';
+import { readForecast } from '../base/functionalConstants'
 
 function SearchBar(props) {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     const recognition = new SpeechRecognition();
+    const forecast = 'forecast';
+    // const louder = 'louder';
+    // const quieter = 'quieter';
     const [lang, setLang] = useState('en-US');
 
     useEffect(updateLang, [props.lang]);
 
     function updateLang() {
         switch(props.lang) {
-            case 'BE':
+            case 'be':
                 setLang('ru-RU');
                 break;
-            case 'EN':
+            case 'en':
                 setLang('en-US');
                 break;
-            case 'RU':
+            case 'ru':
                 setLang('ru-RU');
                 break;
             default:
@@ -38,6 +42,12 @@ function SearchBar(props) {
         const { resultIndex } = e;
         const but = document.querySelector('.search-but');
         const tscript = e.results[resultIndex][0].transcript;
+        if (tscript === forecast || tscript === 'форкаст') {
+            readForecast(lang);
+            toggleSpeechRecorder();
+            return;
+        }
+
         props.fn(tscript);
         toggleSpeechRecorder();
         but.click();
