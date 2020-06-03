@@ -103,7 +103,7 @@ function App() {
     const spinner = document.querySelector('.rotate-icon');
     const loader = document.querySelector('.preloader');
     spinner.classList.add('load-image'); 
-    console.log(`запрос бекграунда: ${BACKGROUND_API.base}/random?orientation=landscape&per_page=1&featured=nature&query=${pictureDescription || desc},${pictureCity || city},${currentWeatherPeriod(new Date().getMonth())},${currentDayState(new Date().getHours())}&client_id=${BACKGROUND_API.key}`);
+    console.log(`запрос бекграунда: ${BACKGROUND_API.base}/random?orientation=landscape&per_page=1&featured=nature&query=${pictureDescription || desc},${pictureCity || city},${currentWeatherPeriod(new Date().getMonth())},${currentDayState(new Date().getHours())}&client_id=...`);
     fetch(`${BACKGROUND_API.base}/random?orientation=landscape&per_page=1&featured=nature&query=${pictureDescription || desc},${pictureCity || city},${currentWeatherPeriod(new Date().getMonth())},${currentDayState(new Date().getHours())}&client_id=${BACKGROUND_API.key}`)
       .then(res => res.ok ? res.json() : Promise.reject(res))
       .then(result => {
@@ -128,7 +128,17 @@ function App() {
         langSelector.forEach(selector => {
           if (selector.innerText === appLang.innerText) {
             selector.click();
-          } 
+          }
+          if (!localStorage.getItem('guide')) {
+            alert(`Привет! Небольшой гайд по голосовому управлению ) 
+            Для получения прогноза погоды нажми кнопку "play".\n
+            Что бы получить прогноз голосовой командой нажми на иконку микрофона, и в зависимости от выбранного языка, скажи <Прогноз>, либо <forecast>.\n 
+            Озвучку можно остановить нажав на кнопку стоп.\n Чтобы следующее сообщение было тише, в зависимости от выбранного языка скажи <тише>, либо <quieter>\n
+            Для увеличения громкости <громче> и <louder> соответственно.\n
+            Ключ для отображения этого сообщения хранится в localStorage и до следующей очистки кеша оно больше не появится\n
+            Удачи!`);
+            localStorage.setItem('guide', true);
+          }
         });
         langMenu.classList.add('hidden-list');
       }; 
@@ -137,7 +147,7 @@ function App() {
         langSelector.forEach(selector => {
           if (selector.innerText === appLang.innerText) {
             selector.click();
-          } 
+          }  
         });
         langMenu.classList.add('hidden-list');
       };      

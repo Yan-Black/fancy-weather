@@ -9,14 +9,14 @@ import RegionDate from './Date';
 function Main(props) {
   const regexp = /12:00:00/;
   const forecastList = props.forecast.list.filter(obj => regexp.test(obj.dt_txt));
-  
+ 
     return (
             <div>
               <div className="weather-section">
                 <div className="weather-block">
                   <div className="weather-header">
                     <div className="location">
-                        <LocationBlock city={props.city} country={props.country} />
+                        <LocationBlock city={props.city.replace('City', '')} country={props.country} />
                           <RegionDate timeZone={props.weather.timezone} />
                     </div>
                       <Clock timeZone={props.weather.timezone} />

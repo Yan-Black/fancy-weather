@@ -1,5 +1,6 @@
 import { daysBel, daysEng, daysRu } from './translateConstants';
 import { TRANSLATE_API } from './apiConstants';
+import { phrase, synth } from '../components/Search';
 
 export const setNewBackImage = (fn, src, preloader) => {
   fn(src);
@@ -134,7 +135,7 @@ export const setActiveLangFromStorage = () => {
   }
 }
 
-export const changeAppLang = (dict, codes, days, months, lang) => {
+export const changeAppLang = (dict, codes, days, daysShort, months, lang) => {
   const elemsToTranslate = document.querySelectorAll('[data-i18n]');
   const daysToTranslate = document.querySelectorAll('[data-forecast]');
   const city = document.querySelector('.city');
@@ -145,7 +146,7 @@ export const changeAppLang = (dict, codes, days, months, lang) => {
   elemsToTranslate.forEach((elem) => {
       elem.innerText = dict[elem.getAttribute('data-i18n')] || codes[elem.getAttribute('data-i18n')];
       if (elem.getAttribute('data-i18n') === 'day') {
-        elem.innerText = `${days[new Date().getDay()]} `;
+        elem.innerText = `${daysShort[new Date().getDay()]} `;
       }
       if (elem.getAttribute('data-i18n') === 'month') {
         elem.innerText = `${months[new Date().getMonth()]} `;
@@ -239,23 +240,62 @@ export const handleImageRequestError = (fn) => {
   }
 }
 
-export const readForecast = (lang) => {
+export const toggleSpeechRecorder = (rec) => {
+  const mic = document.querySelector('.mic-icon');
+  mic.classList.toggle('mic-active');
+  if (mic.classList.contains('mic-active')) {
+      rec.start();
+  } else {
+      rec.stop();
+  }
+}
+
+
+export const readForecast = (volume) => {
   const temp = document.querySelector('.main-temp').innerText;
   const description = document.querySelector('.weather-state').innerText;
   const feelsLike = document.querySelector('.description-temp').innerText;
   const humidity = document.querySelector('.humidity').innerText;
   const wind = document.querySelector('.wind').innerText;
-  const synth = window.speechSynthesis;
   const ruForecast = `Сегодня ${temp}, ${description}, ощущается как ${feelsLike}, влажность ${humidity}, скорость ветра ${wind} метров в секунду`;
   const enForecast = `Today is ${temp}, ${description}, feels like ${feelsLike}, humidity is ${humidity}, wind speed is  ${wind} meters in a second`;
-  if (lang === 'en-US') {
-    const phrase = new SpeechSynthesisUtterance(enForecast);
-    phrase.lang = lang;
+  const playIcon = document.querySelector('.play-icon');
+  const stopIcon = document.querySelector('.stop-icon');
+
+  if (phrase.lang === 'en-EN') {
+    phrase.text = enForecast;
+    if (volume === 'quieter' || volume === 'тише') {
+      synth.volume = 0.5;
+    }
+    if (volume === 'louder' || volume === 'громче') {
+      synth.volume = 1;
+    }
     synth.speak(phrase);
+    phrase.onend = () => {
+      playIcon.classList.add('active-icon')
+      stopIcon.classList.remove('active-icon');
+    } 
   }
-  if (lang === 'ru-RU') {
-    const phrase = new SpeechSynthesisUtterance(ruForecast);
-    phrase.lang = lang;
+  if (phrase.lang === 'ru-RU') {
+    phrase.text = ruForecast;
+    if (volume === 'quieter' || volume === 'тише') {
+      phrase.volume = 0.5;
+    }
+    if (volume === 'louder' || volume === 'громче') {
+      phrase.volume = 1;
+    }
     synth.speak(phrase);
+    phrase.onend = () => {
+      playIcon.classList.add('active-icon')
+      stopIcon.classList.remove('active-icon');
+    } 
+  }
+  if (playIcon.classList.contains('active-icon')) {
+      playIcon.classList.remove('active-icon')
+      stopIcon.classList.add('active-icon');
+  } else {
+    synth.cancel();
+    playIcon.classList.add('active-icon')
+    stopIcon.classList.remove('active-icon');
   }
 }

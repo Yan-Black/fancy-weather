@@ -43,6 +43,21 @@ export const translationsToBel = {
     'Нядзеля', 'Панядзелак', 'Аўторак', 'Серада', 'Чацвер', 'Пятнiца', 'Субота'
   ];
 
+  export const daysEngShort = [
+    'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat',
+    'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'
+  ];
+
+  export const daysRuShort = [
+    'Вск', 'Пнд', 'Втр', 'Срд', 'Чтв', 'Птн', 'Сбт',
+    'Вск', 'Пнд', 'Втр', 'Срд', 'Чтв', 'Птн', 'Сбт'
+  ];
+  
+  export const daysBelShort = [
+    'Няд', 'Пнд', 'Аўтк', 'Сер', 'Чцв', 'Пятi', 'Суб',
+    'Няд', 'Пнд', 'Аўтк', 'Сер', 'Чцв', 'Пятi', 'Суб'
+  ];
+
   export const monthsEng = [
     'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December',
     'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'

@@ -5,6 +5,8 @@ import { changeUnits, changeAppLang } from '../base/functionalConstants';
 import { weatherCodesBel, weatherCodesRu, weatherCodesEng } from '../base/weatherCodes';
 import { translationsToEng, translationsToRu, translationsToBel } from '../base/translateConstants';
 import { daysBel, daysEng, daysRu, monthsBel, monthsRu, monthsEng } from '../base/translateConstants';
+import { daysBelShort, daysEngShort, daysRuShort } from '../base/translateConstants';
+import { recognition, phrase } from './Search';
 import './css/Controls.css';
 
 function revealList() {
@@ -44,26 +46,34 @@ function selectLang(e) {
     case 'RU':
       appLang.innerText = 'RU';
       input.placeholder = 'Поиск...';
-      changeAppLang(translationsToRu, weatherCodesRu, daysRu, monthsRu, e.target.innerText);
+      changeAppLang(translationsToRu, weatherCodesRu, daysRu, daysRuShort, monthsRu, e.target.innerText);
       localStorage.setItem('lang', ru);
+      recognition.lang = 'ru-RU';
+      phrase.lang = 'ru-RU';
       break;
     case 'EN':
       appLang.innerText = 'EN';
       input.placeholder = 'Search...';
-      changeAppLang(translationsToEng, weatherCodesEng, daysEng, monthsEng, e.target.innerText);
+      changeAppLang(translationsToEng, weatherCodesEng, daysEng, daysEngShort, monthsEng, e.target.innerText);
       localStorage.setItem('lang', en);
+      recognition.lang = 'en-EN';
+      phrase.lang = 'en-EN';
       break;
     case 'BE':
       appLang.innerText = 'BE';
       input.placeholder = 'Пошук...';
-      changeAppLang(translationsToBel, weatherCodesBel, daysBel, monthsBel, 'be');
+      changeAppLang(translationsToBel, weatherCodesBel, daysBel, daysBelShort, monthsBel, 'be');
       localStorage.setItem('lang', be);
+      recognition.lang = 'ru-RU';
+      phrase.lang = 'ru-RU';
       break;
     default:
       appLang.innerText = 'EN';
       input.placeholder = 'Search...';
       changeAppLang(translationsToEng, weatherCodesEng, daysEng, monthsEng, e.target.innerText);
       localStorage.setItem('lang', en);
+      recognition.lang = 'en-EN';
+      phrase.lang = 'en-EN';
       break;
   }
 }

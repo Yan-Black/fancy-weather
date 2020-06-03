@@ -2,14 +2,19 @@ import React, { useState, useEffect } from 'react';
 import './css/Search.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMicrophone } from '@fortawesome/free-solid-svg-icons';
+import { faPlay, faStop } from '@fortawesome/free-solid-svg-icons';
 import { readForecast } from '../base/functionalConstants'
+import { toggleSpeechRecorder } from '../base/functionalConstants';
+
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+export const recognition = new SpeechRecognition();
+export const phrase = new SpeechSynthesisUtterance();
+export const synth = window.speechSynthesis;
 
 function SearchBar(props) {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
     const forecast = 'forecast';
-    // const louder = 'louder';
-    // const quieter = 'quieter';
+    const playIcon = document.querySelector('.play-icon');
+    const stopIcon = document.querySelector('.stop-icon');
     const [lang, setLang] = useState('en-US');
 
     useEffect(updateLang, [props.lang]);
@@ -42,9 +47,27 @@ function SearchBar(props) {
         const { resultIndex } = e;
         const but = document.querySelector('.search-but');
         const tscript = e.results[resultIndex][0].transcript;
-        if (tscript === forecast || tscript === 'форкаст') {
-            readForecast(lang);
-            toggleSpeechRecorder();
+        if (tscript === forecast || tscript === 'прогноз') {
+            readForecast();
+            toggleSpeechRecorder(recognition);
+            playIcon.classList.remove('active-icon')
+            stopIcon.classList.add('active-icon');
+            return;
+        }
+
+        if (tscript === 'quieter' || tscript === 'тише') {
+            readForecast(tscript);
+            toggleSpeechRecorder(recognition);
+            playIcon.classList.remove('active-icon')
+            stopIcon.classList.add('active-icon');
+            return;
+        }
+
+        if (tscript === 'louder' || tscript === 'громче') {
+            readForecast(tscript);
+            toggleSpeechRecorder(recognition);
+            playIcon.classList.remove('active-icon')
+            stopIcon.classList.add('active-icon');
             return;
         }
 
@@ -53,24 +76,18 @@ function SearchBar(props) {
         but.click();
     }
 
-    function toggleSpeechRecorder() {
-        const mic = document.querySelector('.mic-icon');
-        mic.classList.toggle('mic-active');
-        if (mic.classList.contains('mic-active')) {
-            recognition.start();
-        } else {
-            recognition.stop();
-        }
-    }
-
     return(
         <div className="search-box">
             <input id="searcher" type="text" className="search-bar" placeholder="Search..."
                 onChange={e => props.fn(e.target.value)}
                 value={props.query} 
                 onKeyPress={props.search} />
+            <button className="play">
+                <FontAwesomeIcon icon={faPlay} onClick={readForecast} className="play-icon active-icon"/>
+                <FontAwesomeIcon icon={faStop} onClick={readForecast} className="stop-icon"/>
+            </button>
             <button className="mic">
-                <FontAwesomeIcon icon={faMicrophone} onClick={toggleSpeechRecorder}className="mic-icon"/>
+                <FontAwesomeIcon icon={faMicrophone} onClick={toggleSpeechRecorder.bind(null, recognition)}className="mic-icon"/>
             </button>
             <button data-i18n="search" className="search-but" onClick={props.search}>Search</button>
         </div>

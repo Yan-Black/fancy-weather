@@ -11,7 +11,7 @@
   .search-bar, .search-but{
     display: block;
     cursor: pointer;
-    width: 70%;
+    width: 60%;
     padding: 0 15px;
     appearance: none;
     background: none;
@@ -25,7 +25,7 @@
     z-index: 3;
   }
   
-  .mic {
+  .play, .mic {
     width: 10%;
     border-radius: none;
     outline: none;
@@ -34,12 +34,25 @@
     background-color: rgba(255, 255, 255, 0.5);
     z-index: 3;
   }
+
+  .mic {
+    font-size: 0.85vw;
+  }
+
+  .play {
+    width: 5%;
+    font-size: 0.65vw;
+  }
+
+  .play-icon, .stop-icon {
+    display: none;
+  }
   
-  .mic-icon {
+  .play-icon, .mic-icon, .stop-icon {
     color: #313131;
   }
   
-  .mic-icon:hover {
+  .play-icon:hover, .stop-icon:hover, .mic-icon:hover {
     color: rgba(0, 95, 32, 0.8);
     cursor: pointer;
   }
@@ -47,6 +60,10 @@
   .mic-active {
     color: rgba(0, 95, 32, 0.8);
     animation: .7s scale infinite linear;
+  }
+
+  .active-icon {
+    display: inline;
   }
 
   @keyframes scale {
