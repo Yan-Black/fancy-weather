@@ -109,6 +109,12 @@
     background-color: rgba(27, 27, 27, 0.7);
 }
 
+@media (max-width: 1024px) {
+    .change-f, .change-c {
+        font-size: 2.1vw;
+    }
+}
+
 @media (max-width: 768px) {
     .change-f, .change-c {
         font-size: 3vw;

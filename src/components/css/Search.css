@@ -22,8 +22,9 @@
     color: #313131;
     font-size: 1vw;
     transition: .4s ease;
-    z-index: 3;
+    z-index: 1;
   }
+
   
   .play, .mic {
     width: 10%;
@@ -32,7 +33,7 @@
     user-select: none;
     border: none;
     background-color: rgba(255, 255, 255, 0.5);
-    z-index: 3;
+    z-index: 1;
   }
 
   .mic {
@@ -93,6 +94,14 @@
     .search-box {
       width: 45%;
     }
+
+    .mic {
+      font-size: 1.25vw;
+    }
+  
+    .play {
+      font-size: 1.05vw;
+    }
   }
 
   @media (max-width: 768px) {
@@ -103,7 +112,26 @@
     .search-box {
       width: 55%;
     }
+
+    .mic {
+      font-size: 1.55vw;
+    }
+  
+    .play {
+      font-size: 1.35vw;
+    }
   }
+
+@media (max-width: 568px) {
+  .search-box {
+    width: 45%;
+  }
+
+  .search-but {
+    font-size: 1.2vw;
+  }
+}
+
 
 @media (max-width: 450px) {
   .search-bar, .search-but {
@@ -112,5 +140,13 @@
   
   .search-box {
     width: 100%;
+  }
+
+  .mic {
+    font-size: 3.55vw;
+  }
+
+  .play {
+    font-size: 3.35vw;
   }
 }

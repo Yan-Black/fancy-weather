@@ -72,7 +72,7 @@ function SearchBar(props) {
         }
 
         props.fn(tscript);
-        toggleSpeechRecorder();
+        toggleSpeechRecorder(recognition);
         but.click();
     }
 
