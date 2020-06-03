@@ -265,10 +265,10 @@ export const readForecast = (volume) => {
   if (phrase.lang === 'en-EN') {
     phrase.text = enForecast;
     if (volume === 'quieter' || volume === 'тише') {
-      synth.volume = 0.5;
+      phrase.volume = 0.5;
     }
     if (volume === 'louder' || volume === 'громче') {
-      synth.volume = 1;
+      phrase.volume = 1;
     }
     synth.speak(phrase);
     phrase.onend = () => {
