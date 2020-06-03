@@ -14,16 +14,12 @@ function MapBlock({ lat: latitude, lng: longtitude, setLon, setLat, name }) {
     useEffect(() => {
       mapboxgl.accessToken = 'pk.eyJ1IjoieWFuYmxhY2siLCJhIjoiY2thcGc1anZnMWV1bjJybXZlczFxZWNneiJ9.GQmY2INRmLW50ynlijmI3A';
       const initializeMap = ({ setMap, mapContainer }) => {
-        // const start = [longtitude, latitude];
-        // const end = [longtitude, latitude];
         const map = new mapboxgl.Map({
           container: mapContainer.current,
           style: "mapbox://styles/mapbox/streets-v11", 
           center: [longtitude, latitude],
           zoom,
         });
-
-        // let isAtStart = true;
 
         map.on("load", () => {
               setMap(map);
@@ -39,25 +35,11 @@ function MapBlock({ lat: latitude, lng: longtitude, setLon, setLat, name }) {
           setLat(map.getCenter().lat.toFixed(2));
             setZoom(map.getZoom().toFixed(2));
         });
-        // document.querySelector('.search-but').addEventListener('click', () => {
-        //   const target = isAtStart ? end : start;
-        //   isAtStart = !isAtStart;
-        //   map.flyTo({
-        //     center: target,
-        //     zoom: 9,
-        //     bearing: 0,
-        //     speed: 5,
-        //     curve: 1,
-        //     easing: function(t) {
-        //       return t;
-        //       },
-        //       essential: true,
-        //     });
-        // })
       };
   
         !map && initializeMap({ setMap, mapContainer });
     }, [map, longtitude, latitude, zoom, setLat, setLon, name]);   
+    
     const truncate = (n) => {
         return n > 0 ? Math.floor(n) : Math.ceil(n);
     }
