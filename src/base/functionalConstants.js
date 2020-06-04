@@ -141,7 +141,7 @@ export const changeAppLang = (dict, codes, days, daysShort, months, lang) => {
   const city = document.querySelector('.city');
   const country = document.querySelector('.country');
   daysToTranslate.forEach((_, i) => {
-    daysToTranslate[i].innerText = days[new Date().getDay() + i];
+    daysToTranslate[i].innerText = days[new Date().getDay() + i + 1];
   })
   elemsToTranslate.forEach((elem) => {
       elem.innerText = dict[elem.getAttribute('data-i18n')] || codes[elem.getAttribute('data-i18n')];
