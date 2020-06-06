@@ -55,7 +55,7 @@ function Main(props) {
                       }
                     />
                 </div>
-                  <MapBlock lng={props.lng} lat={props.lat} setLon={props.setLon} setLat={props.setLat} name={props.weather.name}/>
+                  <MapBlock lng={props.lng} lat={props.lat} />
               </div>
             </div>
     )

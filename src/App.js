@@ -93,6 +93,8 @@ function App() {
     fetch(`${WEATHER_API.base}forecast?lat=${lat}&lon=${lon}&units=${units}&appid=${WEATHER_API.key}`)
       .then(res => res.ok ? res.json() : Promise.reject(res))
       .then(result => {
+        console.log(result.list);
+        
         setForecast(result);
     })
     .catch()
@@ -171,8 +173,6 @@ function App() {
                 weatherDescription={weatherDescription} 
                 forecast={forecast} lng={longtitude} 
                 lat={latitude} 
-                setLon={setLon} 
-                setLat={setLat} 
               />
         ) : (null)}
       </main>
