@@ -10,14 +10,19 @@ function MapBlock({ lat: latitude, lng: longtitude}) {
     const mapContainer = useRef(null);
 
     useEffect(() => {
-      map && map.flyTo({ center: [longtitude, latitude], essential: true});
-      map && new mapboxgl.Marker() 
-      .setLngLat([longtitude, latitude]) 
-      .addTo(map)
-      setLong(longtitude);
-      setLat(latitude);
-      setZoom(10);
-    }, [longtitude, latitude]);
+      if (map) {
+        map.flyTo({ center: [longtitude, latitude], essential: true});
+        map.on('zoomend', function() {
+          map.resize();
+          });
+        new mapboxgl.Marker() 
+         .setLngLat([longtitude, latitude]) 
+         .addTo(map);
+        setLong(longtitude);
+        setLat(latitude);
+        setZoom(10);
+      }
+    }, [map, longtitude, latitude]);
   
     useEffect(() => {
       mapboxgl.accessToken = 'pk.eyJ1IjoieWFuYmxhY2siLCJhIjoiY2thcGc1anZnMWV1bjJybXZlczFxZWNneiJ9.GQmY2INRmLW50ynlijmI3A';
@@ -31,7 +36,8 @@ function MapBlock({ lat: latitude, lng: longtitude}) {
 
         map.on("load", () => {
           setMap(map);
-
+          map.resize();
+          
           new mapboxgl.Marker() 
           .setLngLat([long, lat]) 
           .addTo(map)
