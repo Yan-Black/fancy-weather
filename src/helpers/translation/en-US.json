@@ -1,0 +1,9 @@
+{
+    "feelsLike": "feels like: " ,
+    "humidity": "humidity: " ,
+    "wind": "wind: " ,
+    "search": "search",
+    "ms": " m/s",
+    "latitude": "Latitude:",
+    "longtitude": "Longtitude:"
+}

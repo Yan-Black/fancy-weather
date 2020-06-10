@@ -1,54 +1,54 @@
 import React, { useState, useEffect } from 'react';
-import { chooseDaysMonthArray } from '../base/functionalConstants';
-import { weatherConditionsIcons } from '../base/weatherIcons';
+import { chooseDaysMonthArray } from '../helpers/functionalConstants';
+import { weatherConditionsIcons } from '../helpers/weatherIcons';
 import './css/Forecast.css';
 
 function ForeacstBlock(props) {
-    const [temp, setTemp] = useState(props.temp);
-    useEffect(updateTemp,[props.temp]);
-    function updateTemp() {
-        setTemp(props.temp);
-    }
+	const [temp, setTemp] = useState(props.temp);
+	useEffect(updateTemp,[props.temp]);
+	function updateTemp() {
+		setTemp(props.temp);
+	}
 
-    return (
-        <div className="forecast">
-            <div className="forecast-info">
-                <h5 data-forecast="translate" className="day">{chooseDaysMonthArray()[new Date().getDay() + 1]}</h5>
-                <div className="forecast-temp">
-                    <img className="forecast-icon" src={weatherConditionsIcons[props.src[0]]} alt=""/>
-                    <p className="temp-val">{temp[0].toFixed(0) + '°'}</p>
-                </div>
-            </div>
-            <div className="forecast-info">
-                <h5 data-forecast="translate" className="day">{chooseDaysMonthArray()[new Date().getDay() + 2]}</h5>
-                <div className="forecast-temp">
-                    <img className="forecast-icon" src={weatherConditionsIcons[props.src[1]]} alt=""/>
-                    <p className="temp-val">{temp[1].toFixed(0) + '°'}</p>
-                </div>
-            </div>
-            <div className="forecast-info">
-                <h5 data-forecast="translate" className="day">{chooseDaysMonthArray()[new Date().getDay() + 3]}</h5>
-                <div className="forecast-temp">
-                    <img className="forecast-icon" src={weatherConditionsIcons[props.src[2]]} alt=""/>
-                    <p className="temp-val">{temp[2].toFixed(0) + '°'}</p>
-                </div>
-            </div>
-            <div className="forecast-info">
-                <h5 data-forecast="translate" className="day">{chooseDaysMonthArray()[new Date().getDay() + 4]}</h5>
-                <div className="forecast-temp">
-                    <img className="forecast-icon" src={weatherConditionsIcons[props.src[3]]} alt=""/>
-                    <p className="temp-val">{temp[3].toFixed(0) + '°'}</p>
-                </div>
-            </div>
-            <div className="forecast-info">
-                <h5 data-forecast="translate" className="day">{chooseDaysMonthArray()[new Date().getDay() + 5]}</h5>
-                <div className="forecast-temp">
-                    <img className="forecast-icon" src={weatherConditionsIcons[props.src[4]]} alt=""/>
-                    <p className="temp-val">{temp[4].toFixed(0) + '°'}</p>
-                </div>
-            </div>
-        </div>
-    );
+	return (
+		<div className="forecast">
+			<div className="forecast-info">
+				<h5 data-forecast="translate" className="day">{chooseDaysMonthArray()[new Date().getDay() + 1]}</h5>
+				<div className="forecast-temp">
+					<img className="forecast-icon" src={weatherConditionsIcons[props.src[0]]} alt=""/>
+					<p className="temp-val">{temp[0].toFixed(0) + '°'}</p>
+				</div>
+			</div>
+			<div className="forecast-info">
+				<h5 data-forecast="translate" className="day">{chooseDaysMonthArray()[new Date().getDay() + 2]}</h5>
+				<div className="forecast-temp">
+					<img className="forecast-icon" src={weatherConditionsIcons[props.src[1]]} alt=""/>
+					<p className="temp-val">{temp[1].toFixed(0) + '°'}</p>
+				</div>
+			</div>
+			<div className="forecast-info">
+				<h5 data-forecast="translate" className="day">{chooseDaysMonthArray()[new Date().getDay() + 3]}</h5>
+				<div className="forecast-temp">
+					<img className="forecast-icon" src={weatherConditionsIcons[props.src[2]]} alt=""/>
+					<p className="temp-val">{temp[2].toFixed(0) + '°'}</p>
+				</div>
+			</div>
+			<div className="forecast-info">
+				<h5 data-forecast="translate" className="day">{chooseDaysMonthArray()[new Date().getDay() + 4]}</h5>
+				<div className="forecast-temp">
+					<img className="forecast-icon" src={weatherConditionsIcons[props.src[3]]} alt=""/>
+					<p className="temp-val">{temp[3].toFixed(0) + '°'}</p>
+				</div>
+			</div>
+			<div className="forecast-info">
+				<h5 data-forecast="translate" className="day">{chooseDaysMonthArray()[new Date().getDay() + 5]}</h5>
+				<div className="forecast-temp">
+					<img className="forecast-icon" src={weatherConditionsIcons[props.src[4]]} alt=""/>
+					<p className="temp-val">{temp[4].toFixed(0) + '°'}</p>
+				</div>
+			</div>
+		</div>
+	);
 }
 
 export default ForeacstBlock;
