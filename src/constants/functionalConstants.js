@@ -1,9 +1,5 @@
-import { daysBel, daysEng, daysRu } from './helpers';
-import { TRANSLATE_API } from './apiConstants';
+import { TRANSLATE_API } from './api-keys';
 import { phrase, synth } from '../components/Search';
-import enUS from './translation/en-US.json';
-import ruRU from './translation/ru-RU.json';
-import beBE from './translation/be-BE.json';
 
 export const setNewBackImage = (fn, src, preloader) => {
 	fn(src);
@@ -150,27 +146,6 @@ function translateLocation(elem, lang) {
 		})
 }
 
-export const chooseDaysMonthArray = () => {
-	const lang = localStorage.getItem('lang');
-	let daysArr
-
-	switch(lang) {
-	case 'ru':
-		daysArr = daysRu;
-		break;
-	case 'en':
-		daysArr = daysEng;
-		break;
-	case 'be':
-		daysArr = daysBel;
-		break;
-	default:
-		daysArr = daysEng;
-		break;
-	}
-	return daysArr;
-}
-
 export const showError = err => {
 	const errorBlock = document.querySelector('.error-block');
 	const errorMessage = document.querySelector('.error');
@@ -281,20 +256,5 @@ export const readForecast = (volume) => {
 	}
 }
 
-export const handleFetchResponse = res => {
-	return res.ok ? res.json() : Promise.reject(res);
-}
+export const handleFetchResponse = (res) => (res.ok ? res.json() : Promise.reject(res));
 
-const langMap = {
-	'en-US': enUS,
-	'ru-RU': ruRU,
-	'be-BE': beBE
-};
-
-export const getTranslation = key => {
-	const defaultLang = 'en-US';
-	const language = localStorage.getItem('lang') || defaultLang;
-	const result = langMap[language][key] || key;
-
-	return result;
-}

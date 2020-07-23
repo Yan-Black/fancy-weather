@@ -1,13 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
-import './css/Map.css';
 import mapboxgl from 'mapbox-gl';
+import { en, ru, be } from '../constants/app-langs';
+import './css/Map.css';
 
-function MapBlock({ lat: latitude, lng: longtitude}) {
+const MapBlock = ({ lat: latitude, lng: longtitude }) => {
 	const [map, setMap] = useState(null);
 	const [zoom, setZoom] = useState(10);
 	const [long, setLong] = useState(longtitude);
 	const [lat, setLat] = useState(latitude);
 	const mapContainer = useRef(null);
+
+	const activeLang =
+  localStorage.getItem('appLang') === 'EN'
+  	? en
+  	: localStorage.getItem('appLang') === 'RU'
+  		? ru
+  		: be;
 
 	useEffect(() => {
 		if (map) {
@@ -58,7 +66,7 @@ function MapBlock({ lat: latitude, lng: longtitude}) {
 	}
 
 	const getDMS = function (dd, longOrLat) {
-		let hemisphere = /^[WE]|(?:lon)/i.test(longOrLat)
+		const hemisphere = /^[WE]|(?:lon)/i.test(longOrLat)
 			? dd < 0
 				? "W"
 				: "E"
@@ -70,16 +78,28 @@ function MapBlock({ lat: latitude, lng: longtitude}) {
 		const degrees = truncate(absDD);
 		const minutes = truncate((absDD - degrees) * 60);
 		const seconds = ((absDD - degrees - minutes / 60) * Math.pow(60, 2)).toFixed(2);
+		const dmsArray = [degrees, minutes, seconds, hemisphere];
 
-		let dmsArray = [degrees, minutes, seconds, hemisphere];
 		return `${dmsArray[0]}°${dmsArray[1]}'${dmsArray[2]}" ${dmsArray[3]}`;
 	}
 	return (
 		<div className="map-section">
 			<div ref={el => (mapContainer.current = el)} className='mapContainer' />
 			<div className="map-coords">
-				<p className="prop"><span data-i18n="latitude">Latitude:</span>&nbsp;{getDMS(lat, 'Latitude')}</p>
-				<p className="prop"><span data-i18n="longtitude">Longitude:</span>&nbsp;{getDMS(long, 'Longtitude')}</p>
+				<p className="prop">
+					<span>
+						{activeLang.latitude}
+					</span>
+					{' '}
+					{getDMS(latitude, 'Latitude')}
+				</p>
+				<p className="prop">
+					<span>
+						{activeLang.longtitude}
+					</span>
+					{' '}
+					{getDMS(longtitude, 'Longtitude')}
+				</p>
 			</div>
 		</div>
 	);

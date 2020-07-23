@@ -4,7 +4,7 @@
     justify-content: space-around;
 }
 
-.change-image, .change-lang, .change-units, .change-f, .change-c {
+.change-image, .change-lang, .change-units, .change-to-farenheit, .change-to-celsius {
     width: 45px;
     height: 45px;
     border-radius: 5px;
@@ -62,7 +62,7 @@
     position: relative;
 }
 
-.change-f, .change-c {
+.change-to-farenheit, .change-to-celsius {
     border: none;
     cursor: pointer;
     font-size: 1.2vw;
@@ -70,15 +70,15 @@
     color: #fff;
 }
 
-.change-f {
+.change-to-farenheit {
     border-radius: 5px 0 0 5px;
 }
 
-.change-c {
+.change-to-celsius {
     border-radius: 0 5px 5px 0;
 }
 
-.active-but {
+.active-unit {
     background-color: rgba(255, 255, 255, 0.5);
 }
 
@@ -110,13 +110,13 @@
 }
 
 @media (max-width: 1024px) {
-    .change-f, .change-c {
+  .change-to-farenheit, .change-to-celsius {
         font-size: 2.1vw;
     }
 }
 
 @media (max-width: 768px) {
-    .change-f, .change-c {
+  .change-to-farenheit, .change-to-celsius {
         font-size: 3vw;
     }
 }
@@ -127,7 +127,7 @@
         justify-content: flex-start;
     }
 
-    .change-f, .change-c {
+    .change-to-farenheit, .change-to-celsius {
         font-size: 4vw;
     }
 

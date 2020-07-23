@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './css/Clock.css';
 
-function Clock(props) {
+const Clock = ({ timeZone }) => {
 	const [date, setDate] = useState(new Date());
 
 	useEffect(() => {
@@ -10,14 +10,14 @@ function Clock(props) {
 		return function cleanup() {
 			clearInterval(timerID);
 		};
-	}, [props.timeZone]);
+	}, [timeZone]);
 
 	function tick() {
 		setDate(new Date());
 	}
 
 	function showLocaleTime() {
-		const utcOffset = (props.timeZone / 60) / 60;
+		const utcOffset = (timeZone / 60) / 60;
 		const utc = date.getTime() + (date.getTimezoneOffset() * 60000);
 		const regionDate = new Date(utc + (3600000 * utcOffset));
 

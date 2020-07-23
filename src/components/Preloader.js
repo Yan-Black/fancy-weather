@@ -1,7 +1,7 @@
 import React from 'react';
 import './css/Preloader.css';
 
-function Preloader() {
+const Preloader = () => {
 	return (
 		<div className="preloader">
 			<div className="preloader-box">

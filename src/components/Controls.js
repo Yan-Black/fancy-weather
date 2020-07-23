@@ -1,104 +1,101 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDown, faSyncAlt } from '@fortawesome/free-solid-svg-icons';
-import { changeUnits, changeAppLang } from '../helpers/functionalConstants';
-import { weatherCodesBel, weatherCodesRu, weatherCodesEng } from '../helpers/weatherCodes';
-import { translationsToEng, translationsToRu, translationsToBel } from '../helpers/helpers';
-import { daysBel, daysEng, daysRu, monthsBel, monthsRu, monthsEng } from '../helpers/helpers';
-import { daysBelShort, daysEngShort, daysRuShort } from '../helpers/helpers';
-import { recognition, phrase } from './Search';
+import { langSelectors } from '../constants/app-constants';
+import { en, ru, be, farenheit, celsius } from '../constants/app-langs';
 import './css/Controls.css';
 
-function revealList() {
-	const langList = document.querySelector('.lang-list');
-	langList.classList.toggle('hidden-list');
-}
+const Controls = ({ changeImg, setLang, lang }) => {
 
-function changeActiveButton(e) {
-	saveUnitsFormat(e);
-	const fButton = document.querySelector('.change-f');
-	const cButton = document.querySelector('.change-c');
-	if(e.target.classList.contains('active-but')) {
-		return
+	// const defaultLang = localStorage.getItem('appLang') || en.appLang;
+	const defaultUnits = localStorage.getItem('appUnits') || celsius;
+
+	const [units, setUnits] = useState(defaultUnits);
+	const [isListOpen, setListOpen] = useState(false);
+
+	const selectLang = (e) => {
+		const { target } = e;
+		const langToApply = target.id.slice(-2);
+		switch (langToApply) {
+		case langToApply === 'EN':
+			setLang(en);
+			break;
+		case langToApply === 'RU':
+			setLang(ru);
+			break;
+		case langToApply === 'BE':
+			setLang(be);
+			break;
+		default: setLang(en);
+		}
+		localStorage.setItem('appLang', langToApply);
 	}
-	fButton.classList.toggle('active-but');
-	cButton.classList.toggle('active-but');
-	changeUnits(fButton);
-}
 
-function saveUnitsFormat(e) {
-	const imperial = 'imerial';
-	const metric = 'metric';
-	if (e.target.className === 'change-f') {
-		localStorage.setItem('units', imperial);
-	} else {
-		localStorage.setItem('units', metric);
-	}
-}
+	const openlist = () => setListOpen(!isListOpen);
 
-function selectLang(e) {
-	const appLang = document.querySelector('.app-lang');
-	const input = document.querySelector('.search-bar');
-	const ru = 'ru';
-	const en = 'en';
-	const be = 'be';
-	switch(e.target.innerText) {
-	case 'RU':
-		appLang.innerText = 'RU';
-		input.placeholder = 'Поиск...';
-		changeAppLang(translationsToRu, weatherCodesRu, daysRu, daysRuShort, monthsRu, e.target.innerText);
-		localStorage.setItem('lang', ru);
-		recognition.lang = 'ru-RU';
-		phrase.lang = 'ru-RU';
-		break;
-	case 'EN':
-		appLang.innerText = 'EN';
-		input.placeholder = 'Search...';
-		changeAppLang(translationsToEng, weatherCodesEng, daysEng, daysEngShort, monthsEng, e.target.innerText);
-		localStorage.setItem('lang', en);
-		recognition.lang = 'en-EN';
-		phrase.lang = 'en-EN';
-		break;
-	case 'BE':
-		appLang.innerText = 'BE';
-		input.placeholder = 'Пошук...';
-		changeAppLang(translationsToBel, weatherCodesBel, daysBel, daysBelShort, monthsBel, 'be');
-		localStorage.setItem('lang', be);
-		recognition.lang = 'ru-RU';
-		phrase.lang = 'ru-RU';
-		break;
-	default:
-		appLang.innerText = 'EN';
-		input.placeholder = 'Search...';
-		changeAppLang(translationsToEng, weatherCodesEng, daysEng, monthsEng, e.target.innerText);
-		localStorage.setItem('lang', en);
-		recognition.lang = 'en-EN';
-		phrase.lang = 'en-EN';
-		break;
-	}
-}
+	const changeActiveUnits = () => {
+		if (units === celsius) {
+			setUnits(farenheit);
+			localStorage.setItem('appUnits', farenheit);
+		}	else {
+			setUnits(celsius);
+			localStorage.setItem('appUnits', celsius);
+		}
+	};
 
-function Controls(props) {
 	return (
 		<div className="controls">
-			<div className="change-image" onClick={props.changeImg}>
+			<div className="change-image" onClick={changeImg}>
 				<FontAwesomeIcon icon={faSyncAlt} className="rotate-icon"/>
 			</div>
-			<div className="change-lang" onClick={revealList}>
-				<p className="app-lang">EN</p>
+			<div
+				className="change-lang"
+				onClick={openlist}
+			>
+				<p className="app-lang">{lang.appLang}</p>
 				<FontAwesomeIcon icon={faAngleDown} />
-				<ul className="lang-list hidden-list" onClick={selectLang}>
-					<li className="lang-selector">RU</li>
-					<li className="lang-selector">EN</li>
-					<li className="lang-selector">BE</li>
+				<ul
+					className={
+						isListOpen
+							? 'lang-list'
+							: 'hidden-list'
+					}
+					onClick={selectLang}
+				>
+					{langSelectors.map((sel) => (
+						<li
+							className="lang-selector"
+							id={sel.id}
+							key={sel.id}
+						>
+							{sel.lang}
+						</li>
+					))}
 				</ul>
 			</div>
 			<div className="change-units">
-				<button className="change-f" onClick={changeActiveButton}>F°</button>
-				<button className="change-c active-but" onClick={changeActiveButton}>C°</button>
+				<button
+					className={
+						units === celsius
+							? 'change-to-farenheit active-unit'
+							: 'change-to-farenheit'
+					}
+					onClick={changeActiveUnits}>
+					{'C°'}
+				</button>
+				<button
+					className={
+						units === farenheit
+							? 'change-to-celsius active-unit'
+							: 'change-to-celsius'
+					}
+					onClick={changeActiveUnits}
+				>
+					{'F°'}
+				</button>
 			</div>
 		</div>
 	)
 }
 
-export default Controls
+export default Controls;

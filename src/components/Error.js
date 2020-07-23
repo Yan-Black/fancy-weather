@@ -1,7 +1,7 @@
 import React from 'react';
 import './css/Error.css';
 
-function ErrorBlock() {
+const ErrorBlock = () => {
 	return (
 		<div className="error-block error-hidden">
 			<span className="error"></span>

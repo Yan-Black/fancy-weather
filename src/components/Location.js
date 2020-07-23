@@ -1,10 +1,18 @@
 import React from 'react';
 import './css/Location.css';
 
-function LocationBlock(props) {
+const LocationBlock = ({ city,country }) => {
 	return (
 		<div className="location-block">
-			<h1 className="city-country"><span className="city">{props.city}</span>, <span className="country">{props.country}</span></h1>
+			<h1 className="city-country">
+				<span className="city">
+					{city}
+				</span>
+				{','}
+				<span className="country">
+					{country}
+				</span>
+			</h1>
 		</div>
 	);
 }

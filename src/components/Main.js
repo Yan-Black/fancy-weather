@@ -6,7 +6,21 @@ import MapBlock from './Map';
 import Clock from './Clock';
 import RegionDate from './Date';
 
-function Main({ weather,city, country, weatherDescription, forecast, lat, lng }) {
+const Main = ({
+	weather: {
+		timezone,
+		weather,
+		main: {
+			temp,
+			feels_like,
+			humidity
+		},
+		wind: {
+			speed
+		}
+	},
+	city, country, weatherDescription, forecast, lat, lng,
+}) => {
 	const regexp = /12:00:00/;
 	const forecastList = forecast.list.filter(obj => regexp.test(obj.dt_txt));
 
@@ -17,20 +31,20 @@ function Main({ weather,city, country, weatherDescription, forecast, lat, lng })
 					<div className="weather-header">
 						<div className="location">
 							<LocationBlock city={city.replace('City', '')} country={country} />
-							<RegionDate timeZone={weather.timezone} />
+							<RegionDate timeZone={timezone} />
 						</div>
-						<Clock timeZone={weather.timezone} />
+						<Clock timeZone={timezone} />
 					</div>
 					<WeatherBlock
-						cod={weather.weather[0].id}
-						temp={weather.main.temp}
-						src={weather.weather[0].icon}
+						cod={weather[0].id}
+						temp={temp}
+						src={weather[0].icon}
 						desc={
 							[
 								weatherDescription,
-								weather.main.feels_like,
-								weather.main.humidity,
-								weather.wind.speed
+								feels_like,
+								humidity,
+								speed
 							]
 						}
 					/>

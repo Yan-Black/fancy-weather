@@ -1,4 +1,4 @@
-export const ID_API ={
+export const ID_API = {
 	key: '465144289736aa',
 	base: 'https://ipinfo.io/'
 };
