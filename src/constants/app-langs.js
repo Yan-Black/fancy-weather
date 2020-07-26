@@ -1,5 +1,6 @@
 export const en = {
-	appLang: 'EN',
+  appLang: 'en_EN',
+  select: 'EN',
 	feelsLike: 'feels like: ' ,
 	humidity: 'humidity: ' ,
 	wind: 'wind: ' ,
@@ -22,7 +23,8 @@ export const en = {
 };
 
 export const ru = {
-	appLang: 'RU',
+  appLang: 'ru_RU',
+  select: 'RU',
 	feelsLike: 'ощущается как: ',
 	humidity: 'влажность: ',
 	wind: 'ветер: ',
@@ -39,13 +41,14 @@ export const ru = {
 		'Вск', 'Пнд', 'Втр', 'Срд', 'Чтв', 'Птн', 'Сбт'
 	],
 	monthes: [
-		'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December',
-		'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
+		'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь',
+		'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
 	]
 }
 
 export const be = {
-	appLang: 'BE',
+  appLang: 'be_BE',
+  select: 'BE',
 	feelsLike: 'адчуваецца як: ',
 	humidity: 'вiльготнасць: ',
 	wind: 'вецер: ',
@@ -67,5 +70,17 @@ export const be = {
 	]
 }
 
-export const farenheit = 'imperial';
-export const celsius = 'metric';
+export const langSelectors = [
+	{
+		id: 'be_BE',
+		lang: 'BE',
+	},
+	{
+		id: 'ru_RU',
+		lang: 'RU',
+	},
+	{
+		id: 'en_EN',
+		lang: 'EN',
+	},
+]

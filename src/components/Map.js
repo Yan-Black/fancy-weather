@@ -1,21 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
-import { en, ru, be } from '../constants/app-langs';
 import './css/Map.css';
 
-const MapBlock = ({ lat: latitude, lng: longtitude }) => {
+const MapBlock = ({ lat: latitude, lng: longtitude, lang }) => {
 	const [map, setMap] = useState(null);
 	const [zoom, setZoom] = useState(10);
 	const [long, setLong] = useState(longtitude);
 	const [lat, setLat] = useState(latitude);
 	const mapContainer = useRef(null);
-
-	const activeLang =
-  localStorage.getItem('appLang') === 'EN'
-  	? en
-  	: localStorage.getItem('appLang') === 'RU'
-  		? ru
-  		: be;
 
 	useEffect(() => {
 		if (map) {
@@ -88,14 +80,14 @@ const MapBlock = ({ lat: latitude, lng: longtitude }) => {
 			<div className="map-coords">
 				<p className="prop">
 					<span>
-						{activeLang.latitude}
+						{lang.latitude}
 					</span>
 					{' '}
 					{getDMS(latitude, 'Latitude')}
 				</p>
 				<p className="prop">
 					<span>
-						{activeLang.longtitude}
+						{lang.longtitude}
 					</span>
 					{' '}
 					{getDMS(longtitude, 'Longtitude')}

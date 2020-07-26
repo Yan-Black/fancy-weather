@@ -33,41 +33,6 @@ export const currentWeatherPeriod = (val) => {
 	}
 }
 
-export const changeUnits = (elem) => {
-
-	const mainTemp = document.querySelector('.main-temp');
-	const descriptionTemp = document.querySelector('.description-temp');
-	const forecastTemp = document.querySelectorAll('.temp-val');
-
-	function convertToImperial(val) {
-		let temp = val.slice(0, val.length - 1);
-		temp = Math.round(temp * 9 / 5 + 32) + '°';
-		return temp;
-	}
-
-	function convertToMetric(val) {
-		let temp = val.slice(0, val.length - 1);
-		temp = Math.round((temp - 32) / 1.8) + '°';
-		return temp;
-	}
-
-	if (elem.classList.contains('active-but') && elem.innerText ==='F°') {
-		forecastTemp.forEach(t => {
-			t.innerText = convertToImperial(t.innerText);
-		})
-		mainTemp.innerText = convertToImperial(mainTemp.innerText);
-		descriptionTemp.innerText = convertToImperial(descriptionTemp.innerText);
-	}
-
-	else if (!elem.classList.contains('active-but') && elem.innerText ==='F°') {
-		forecastTemp.forEach(t => {
-			t.innerText = convertToMetric(t.innerText);
-		})
-		mainTemp.innerText = convertToMetric(mainTemp.innerText);
-		descriptionTemp.innerText = convertToMetric(descriptionTemp.innerText);
-	}
-}
-
 export const defineCurrentUnits = (elem) => {
 	let units;
 	if (elem.classList.contains('active-but')) {

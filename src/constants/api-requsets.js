@@ -6,35 +6,41 @@ import {
 	translateUrl,
 	backgroundUrl,
 } from './api-urls';
+import { regex, forecastRegex } from './app-constants';
 
 export const getUserLocation = async (
-	setLon,
-	setLat,
-	setCityName,
-	setCountryName,
-	setQuery,
-	setWeather,
-	setPictureDesc,
-	setPictureCity,
-	setWeatherDesc,
-	setForecast,
+  setLoading,
+  setLon,
+  setLat,
+  setLocationName,
+  setQuery,
+  setForecastTemp,
+  setMainTemp,
+  setWeather,
+  setWeatherDesc,
+  setForecast,
+  setSourceLoaded,
+  lang,
 ) => {
 	try {
+    setLoading(true);
 		const rawResp = await fetch(userLocationUrl);
-		const resp = await rawResp.json();
-		const { city } = resp;
+    const resp = await rawResp.json();
+    const { city, country } = resp;
 		geoLocation(
-			city,
-			setLon,
-			setLat,
-			setCityName,
-			setCountryName,
-			setQuery,
-			setWeather,
-			setPictureDesc,
-			setPictureCity,
-			setWeatherDesc,
-			setForecast,
+      setLoading,
+      `${city} ${country}`,
+      setLon,
+      setLat,
+      setLocationName,
+      setQuery,
+      setForecastTemp,
+      setMainTemp,
+      setWeather,
+      setWeatherDesc,
+      setForecast,
+      setSourceLoaded,
+      lang,
 		);
 	}
 	catch(err) {
@@ -43,42 +49,54 @@ export const getUserLocation = async (
 }
 
 export const geoLocation = async (
+  setLoading,
 	city,
 	setLon,
 	setLat,
-	setCityName,
-	setCountryName,
-	setQuery,
+  setLocationName,
+  setQuery,
+  setForecastTemp,
+  setMainTemp,
 	setWeather,
-	setPictureDesc,
-	setPictureCity,
 	setWeatherDesc,
-	setForecast,
+  setForecast,
+  setSourceLoaded,
+  lang,
 ) => {
 	try {
+    setLoading(true);
 		const rawResp = await fetch(geoLocationUrl(city));
-		const resp = await rawResp.json();
+    const resp = await rawResp.json();
 		const { results: [
 			{
+        formatted,
 				geometry: { lat, lng },
-				components: { country, state }
 			}
 		]
-		} = resp;
+    } = resp;
+    const cityCountry = formatted.replace(regex, ',');
 		setLon(lng);
 		setLat(lat);
 		getWeatherData(
 			lat,
 			lng,
-			setQuery,
+      setQuery,
+      setMainTemp,
 			setWeather,
-			setPictureDesc,
-			setPictureCity,
-			setWeatherDesc
-		);
-		getForecast(lat, lng, setForecast);
-		translateApiData(country || state, setCityName);
-		translateApiData(country, setCountryName);
+      setWeatherDesc,
+      lang,
+    );
+    getForecast(
+      lat,
+      lng,
+      setForecast,
+      setForecastTemp,
+      setLoading,
+      setSourceLoaded,
+    );
+		translateApiData(
+      cityCountry, setLocationName, lang,
+    );
 	}
 	catch(err) {
 		window.console.log(err);
@@ -88,73 +106,93 @@ export const geoLocation = async (
 export const getWeatherData = async (
 	lat,
 	lon,
-	setQuery,
-	setWeather,
-	setPictureDesc,
-	setPictureCity,
-	setWeatherDesc,
+  setQuery,
+  setMainTemp,
+  setWeather,
+  setWeatherDesc,
+  lang,
 ) => {
 	try {
 		const rawResp = await fetch(geoWeatherUrl(lat, lon));
 		const resp = await rawResp.json();
 		const {
-			name,
+      main: {
+        temp,
+        feels_like,
+      },
 			weather: [
 				{
-					main,
-					description,
-				}
-			]
-		} = resp;
+          description,
+        },
+      ],
+    } = resp;
+
+    setMainTemp([temp, feels_like]);
 		setWeather(resp);
-		setQuery('');
-		setPictureDesc(main);
-		setPictureCity(name);
-		translateApiData(description, setWeatherDesc);
+    setQuery('');
+		translateApiData(description, setWeatherDesc, lang);
 	}
 	catch(err) {
 		window.console.log(err);
 	}
 }
 
-export const getForecast = async (lat, lon, setForecast) => {
+export const getForecast = async (
+  lat,
+  lon,
+  setForecast,
+  setForecastTemp,
+  setLoading,
+  setSourceLoaded,
+) => {
 	try {
 		const rawResp = await fetch(forecastUrl(lat, lon));
-		const resp = await rawResp.json();
-		setForecast(resp);
+    const resp = await rawResp.json();
+    const forecastList = resp.list.filter(({ dt_txt }) => forecastRegex.test(dt_txt));
+    const forecastValues = [];
+    forecastList.forEach(
+      ({ main: {temp_max, temp_min} }) => forecastValues.push(((temp_max + temp_min) / 2))
+    );
+    setForecastTemp(forecastValues);
+    setForecast(forecastList);
+    getBackImage(setSourceLoaded, setLoading);
 	}
 	catch(err) {
 		window.console.log(err);
 	}
 }
 
-export	const translateApiData = async (data, fn) => {
+export	const translateApiData = async (data, setPropTranslate, lang) => {
 	try {
-		const rawResp = await fetch(translateUrl(data));
+		const rawResp = await fetch(translateUrl(data, lang));
 		const resp = await rawResp.json();
 		const { text } = resp;
-		const translate = text[0];
-		fn(translate);
+		const [translate] = text;
+		setPropTranslate(translate);
 	}
 	catch(err) {
 		window.console.log(err);
 	}
 }
 
-const LazyBackgroundLoader = (src, setSourceLoaded) => {
+const LazyBackgroundLoader = (src, setSourceLoaded, setLoading) => {
 	const img = new Image();
 	img.src = src;
 	img.onload = () => {
-		setSourceLoaded(src);
-	};
+    setSourceLoaded(src);
+    setLoading(false);
+  };
+  img.onerror = () => {
+    setLoading(false);
+  }
 }
 
-export const getBackImage = async (setSourceLoaded) => {
+export const getBackImage = async (setSourceLoaded, setLoading) => {
 	try {
 		const rawResp = await fetch(backgroundUrl);
 		const resp = await rawResp.json();
 		const { urls: { full } } = resp;
-		LazyBackgroundLoader(full, setSourceLoaded);
+		LazyBackgroundLoader(full, setSourceLoaded, setLoading);
 	}
 	catch(err) {
 		window.console.log(err);

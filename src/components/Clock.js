@@ -5,18 +5,14 @@ const Clock = ({ timeZone }) => {
 	const [date, setDate] = useState(new Date());
 
 	useEffect(() => {
-		const timerID = setInterval( () => tick(), 1000 );
+		const timerID = setInterval(() => setDate(new Date()), 1000 );
 
 		return function cleanup() {
 			clearInterval(timerID);
 		};
 	}, [timeZone]);
 
-	function tick() {
-		setDate(new Date());
-	}
-
-	function showLocaleTime() {
+	const showLocaleTime = () => {
 		const utcOffset = (timeZone / 60) / 60;
 		const utc = date.getTime() + (date.getTimezoneOffset() * 60000);
 		const regionDate = new Date(utc + (3600000 * utcOffset));

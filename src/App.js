@@ -5,54 +5,52 @@ import SearchBar from './components/Search';
 import Preloader from './components/Preloader';
 import placeholder from './assets/images/background.jpg';
 import Main from './components/Main';
-import { en } from './constants/app-langs';
-import { getUserLocation, geoLocation } from './constants/api-requsets';
+import { en, ru, be } from './constants/app-langs';
+import { getUserLocation } from './constants/api-requsets';
 
 const App = () => {
-	const [query, setQuery] = useState('');
-	const [lang, setLang] = useState(en);
-	const [city, setCity] = useState('');
+  const { appLang } = localStorage;
+  let langToApply;
+  switch (appLang) {
+		case 'en':
+			langToApply = en;
+			break;
+		case 'ru':
+			langToApply = ru;
+			break;
+		case 'be':
+			langToApply = be;
+			break;
+    default: langToApply = en;
+    }
+  const [query, setQuery] = useState('');
+  const [loading, setLoading] = useState(false);
+	const [lang, setLang] = useState(langToApply);
 	const [weather, setWeather] = useState({});
 	const [forecast, setForecast] = useState(null);
 	const [latitude, setLat] = useState(0);
 	const [longtitude, setLon] = useState(0);
 	const [sourceLoaded, setSourceLoaded] = useState(null);
-	const [countryName, setCountryName] = useState('');
-	const [cityName, setCityName] = useState('');
-	const [weatherDescription, setWeatherDesc] = useState('');
-	const [pictureDescription, setPictureDesc] = useState('');
-	const [pictureCity, setPictureCity] = useState('');
-
-	const search = (e) => {
-		if (e.key === 'Enter' || e.target.id === 'search-but') {
-			geoLocation(
-				query || city,
-				setLon,
-				setLat,
-				setCityName,
-				setCountryName,
-				setQuery,
-				setWeather,
-				setPictureDesc,
-				setPictureCity,
-				setWeatherDesc,
-				setForecast,
-			);
-		}
-	}
+	const [locationName, setLocationName] = useState('');
+  const [weatherDescription, setWeatherDesc] = useState('');
+  const [forecastTemp, setForecastTemp] = useState([]);
+  const [mainTemp, setMainTemp] = useState([]);
+  const langToTranslate = lang.select.toLowerCase();
 
 	useEffect(() => {
 		getUserLocation(
+      setLoading,
 			setLon,
 			setLat,
-			setCityName,
-			setCountryName,
-			setQuery,
+      setLocationName,
+      setQuery,
+      setForecastTemp,
+      setMainTemp,
 			setWeather,
-			setPictureDesc,
-			setPictureCity,
 			setWeatherDesc,
-			setForecast,
+      setForecast,
+      setSourceLoaded,
+      langToTranslate,
 		);
 	}, []);
 
@@ -63,29 +61,56 @@ const App = () => {
 				backgroundImage: `url(${sourceLoaded ? sourceLoaded : placeholder})`,
 			}}
 		>
-			{/* <Preloader /> */}
-			<main>
-				<div className="header">
-					<Controls setLang={setLang} lang={lang} />
-					<Error lang={lang} />
-					<SearchBar
-						setQuery={setQuery}
-						query={query}
-						search={search}
-						lang={lang}
-					/>
-				</div>
-				{forecast &&
-					<Main
-						lang={lang}
-						weather={weather}
-						city={cityName}
-						country={countryName}
-						weatherDescription={weatherDescription}
-						forecast={forecast} lng={longtitude}
-						lat={latitude}
-					/>}
-			</main>
+      {loading
+       ? (<Preloader />)
+			 : (<main>
+          <div className="header">
+            <Controls
+              setters={[
+                setLang,
+                setLocationName,
+                setWeatherDesc,
+                setForecastTemp,
+                setMainTemp,
+              ]}
+              lang={lang}
+              mainTemp={mainTemp}
+              forecastTemp={forecastTemp}
+              locationToTranslate={locationName}
+              descToTranslate={weatherDescription}
+            />
+            <Error lang={lang} />
+            <SearchBar
+              setters={[
+                setLoading,
+                setLat,
+                setLon,
+                setLocationName,
+                setForecastTemp,
+                setMainTemp,
+                setWeather,
+                setWeatherDesc,
+                setForecast,
+                setSourceLoaded,
+              ]}
+              lang={lang}
+              query={query}
+              setQuery={setQuery}
+            />
+          </div>
+          {forecast &&
+            <Main
+              lang={lang}
+              weather={weather}
+              mainTemp={mainTemp}
+              forecastTemp={forecastTemp}
+              locationName={locationName}
+              weatherDescription={weatherDescription}
+              forecast={forecast}
+              lng={longtitude}
+              lat={latitude}
+            />}
+			</main>)}
 		</div>
 	);
 }

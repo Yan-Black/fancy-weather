@@ -1,58 +1,74 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDown, faSyncAlt } from '@fortawesome/free-solid-svg-icons';
-import { langSelectors } from '../constants/app-constants';
-import { en, ru, be, farenheit, celsius } from '../constants/app-langs';
+import { celsius, farenheit, convertToImperial, convertToMetric, defaultUnits } from '../constants/app-constants';
+import { translateApiData, getBackImage } from '../constants/api-requsets';
+import { en, ru, be, langSelectors } from '../constants/app-langs';
 import './css/Controls.css';
 
-const Controls = ({ changeImg, setLang, lang }) => {
-
-	// const defaultLang = localStorage.getItem('appLang') || en.appLang;
-	const defaultUnits = localStorage.getItem('appUnits') || celsius;
-
+const Controls = ({
+  setters,
+  lang,
+  locationToTranslate,
+  descToTranslate,
+  mainTemp,
+  forecastTemp,
+}) => {
 	const [units, setUnits] = useState(defaultUnits);
-	const [isListOpen, setListOpen] = useState(false);
+  const [isListOpen, setListOpen] = useState(false);
+  const [
+    setLang, setLocationName, setWeatherDesc, setForecastTemp, setMainTemp,
+  ] = setters;
+
+  const openlist = () => setListOpen(!isListOpen);
 
 	const selectLang = (e) => {
 		const { target } = e;
-		const langToApply = target.id.slice(-2);
-		switch (langToApply) {
-		case langToApply === 'EN':
-			setLang(en);
+    const langToApply = target.id.slice(0, 2);
+	  switch (langToApply) {
+      case 'en':
+      localStorage.setItem('appLang', langToApply);
+      setLang(en);
+      translateApiData(descToTranslate, setWeatherDesc, langToApply);
+      translateApiData(locationToTranslate, setLocationName, langToApply);
 			break;
-		case langToApply === 'RU':
-			setLang(ru);
+      case 'ru':
+      localStorage.setItem('appLang', langToApply);
+      setLang(ru);
+      translateApiData(descToTranslate, setWeatherDesc, langToApply);
+      translateApiData(locationToTranslate, setLocationName, langToApply);
 			break;
-		case langToApply === 'BE':
-			setLang(be);
-			break;
-		default: setLang(en);
-		}
-		localStorage.setItem('appLang', langToApply);
-	}
+      case 'be':
+      localStorage.setItem('appLang', langToApply);
+      setLang(be);
+      translateApiData(descToTranslate, setWeatherDesc, langToApply);
+      translateApiData(locationToTranslate, setLocationName, langToApply);
+		  break;
+	  default: setLang(en);
+	  }
+  }
 
-	const openlist = () => setListOpen(!isListOpen);
-
-	const changeActiveUnits = () => {
+  const changeActiveUnits = () => {
 		if (units === celsius) {
-			setUnits(farenheit);
-			localStorage.setItem('appUnits', farenheit);
+      setUnits(farenheit);
+      setForecastTemp(forecastTemp.map(convertToImperial));
+      setMainTemp(mainTemp.map(convertToImperial));
+      localStorage.setItem('appUnits', farenheit);
 		}	else {
-			setUnits(celsius);
+      setUnits(celsius);
+      setForecastTemp(forecastTemp.map(convertToMetric));
+      setMainTemp(mainTemp.map(convertToMetric));
 			localStorage.setItem('appUnits', celsius);
 		}
 	};
 
 	return (
 		<div className="controls">
-			<div className="change-image" onClick={changeImg}>
+			<div className="change-image" onClick={getBackImage} >
 				<FontAwesomeIcon icon={faSyncAlt} className="rotate-icon"/>
 			</div>
-			<div
-				className="change-lang"
-				onClick={openlist}
-			>
-				<p className="app-lang">{lang.appLang}</p>
+			<div className="change-lang" onClick={openlist}>
+				<p className="app-lang">{lang.select}</p>
 				<FontAwesomeIcon icon={faAngleDown} />
 				<ul
 					className={

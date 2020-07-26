@@ -7,22 +7,25 @@ import Clock from './Clock';
 import RegionDate from './Date';
 
 const Main = ({
+  lang,
 	weather: {
 		timezone,
-		weather,
-		main: {
-			temp,
-			feels_like,
-			humidity
-		},
+    weather: [{ icon }],
+    main: {
+      humidity,
+    },
 		wind: {
 			speed
 		}
-	},
-	city, country, weatherDescription, forecast, lat, lng,
+  },
+  mainTemp,
+  forecastTemp,
+  locationName,
+  weatherDescription,
+  forecast, lat, lng,
 }) => {
-	const regexp = /12:00:00/;
-	const forecastList = forecast.list.filter(obj => regexp.test(obj.dt_txt));
+
+  const [temp, feelsLike] = mainTemp;
 
 	return (
 		<div>
@@ -30,30 +33,30 @@ const Main = ({
 				<div className="weather-block">
 					<div className="weather-header">
 						<div className="location">
-							<LocationBlock city={city.replace('City', '')} country={country} />
-							<RegionDate timeZone={timezone} />
+							<LocationBlock locationName={locationName} />
+							<RegionDate timeZone={timezone} lang={lang} />
 						</div>
 						<Clock timeZone={timezone} />
 					</div>
 					<WeatherBlock
-						cod={weather[0].id}
 						temp={temp}
-						src={weather[0].icon}
-						desc={
-							[
-								weatherDescription,
-								feels_like,
-								humidity,
-								speed
-							]
-						}
+						src={icon}
+            desc={[
+              weatherDescription,
+              feelsLike,
+              humidity,
+              speed,
+            ]}
+            lang={lang}
 					/>
 					<ForecastBlock
-						temp={forecastList.map(({ main }) => main.temp)}
-						src={forecastList.map(({ weather: [{ icon }] }) => icon)}
+            temp={forecast.map(({ main }) => main.temp)}
+            forecastTemp={forecastTemp}
+            src={forecast.map(({ weather: [{ icon }] }) => icon)}
+            lang={lang}
 					/>
 				</div>
-				<MapBlock lng={lng} lat={lat} />
+				<MapBlock lng={lng} lat={lat} lang={lang} />
 			</div>
 		</div>
 	)

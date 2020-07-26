@@ -1,58 +1,47 @@
 import React, { useState, useEffect } from 'react';
 import { weatherConditionsIcons } from '../constants/weatherIcons';
-import { en, ru, be } from '../constants/app-langs';
 import './css/Weather.css';
 
-const WeatherBlock = ({ temp, desc, src, cod }) => {
-	const [descTemp, setDescTemp] = useState(desc[1]);
-	useEffect(updateDescTemp,[desc[1]]);
-	function updateDescTemp() {
-		setDescTemp(desc[1]);
-	}
-	const activeLang =
-  localStorage.getItem('appLang') === 'EN'
-  	? en
-  	: localStorage.getItem('appLang') === 'RU'
-  		? ru
-  		: be;
+const WeatherBlock = ({ temp, desc, src, lang }) => {
+  const [weatherDescription, feelsLike, humidity, speed] = desc;
 
 	return (
 		<div className="weather-area">
 			<div className="current-temp">
 				<p className="main-temp">{`${temp.toFixed(0)}°`}</p>
-				<img className="mobile-icon" src={weatherConditionsIcons[src]} alt=""/>
+				<img className="mobile-icon" src={weatherConditionsIcons[src]} alt="icon"/>
 			</div>
 			<div className="current-icon">
-				<img className="weather-icon" src={weatherConditionsIcons[src]} alt=""/>
+				<img className="weather-icon" src={weatherConditionsIcons[src]} alt="icon"/>
 			</div>
 			<div className="current-description">
 				<ul className="description-list">
-					<li data-i18n={cod} className="weather-state">{desc[0]}</li>
+					<li className="weather-state">{weatherDescription}</li>
 					<li>
 						<span>
-							{activeLang.feelsLike}
+							{lang.feelsLike}
 						</span>
 						<span  className="description-temp">
-							{(descTemp).toFixed(0) + '°'}
+							{`${Math.floor(feelsLike)}°`}
 						</span>
 					</li>
 					<li>
 						<span>
-							{activeLang.humidity}
+							{lang.humidity}
 						</span>
 						<span className="humidity">
-							{`${desc[2]}%`}
+							{`${humidity}%`}
 						</span>
 					</li>
 					<li>
 						<span>
-							{activeLang.wind}
+							{lang.wind}
 						</span>
 						<span className="wind">
-							{desc[3]}
+							{speed}
 						</span>
 						<span>
-							{activeLang.ms}
+							{lang.ms}
 						</span>
 					</li>
 				</ul>

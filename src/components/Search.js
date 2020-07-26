@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { geoLocation } from '../constants/api-requsets';
 import './css/Search.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMicrophone } from '@fortawesome/free-solid-svg-icons';
@@ -11,32 +12,45 @@ export const recognition = new SpeechRecognition();
 export const phrase = new SpeechSynthesisUtterance();
 export const synth = window.speechSynthesis;
 
-const SearchBar = ({ setQuery, query, search, lang }) => {
-	// const forecast = 'forecast';
-	// const playIcon = document.querySelector('.play-icon');
-	// const stopIcon = document.querySelector('.stop-icon');
-	const [activeLang, setActiveLang] = useState(lang);
-	// switch (appLang) {
-	// case appLang === 'EN':
-	// 	setActiveLang(en);
-	// 	break;
-	// case appLang === 'RU':
-	// 	setActiveLang(ru);
-	// 	break;
-	// case appLang === 'BE':
-	// 	setActiveLang(be);
-	// 	break;
-	// default: setActiveLang(en);
-	// }
-	useEffect(() => {
-		setActiveLang(lang);
-	}, [lang]);
-	// recognition.lang = lang;
+const SearchBar = ({ setters, lang, query, setQuery }) => {
+  const langToTranslate = lang.select.toLowerCase();
+  const [
+    setLoading,
+    setLat,
+    setLon,
+    setLocationName,
+    setForecastTemp,
+    setMainTemp,
+    setWeather,
+    setWeatherDesc,
+    setForecast,
+    setSourceLoaded,
+  ] = setters;
 
-	// recognition.onstart = () => {
-	// 	const input = document.getElementById('searcher');
-	// 	input.value = '';
-	// }
+  const search = (e) => {
+		if (e.key === 'Enter' || e.target.id === 'search-but') {
+			geoLocation(
+        setLoading,
+				query,
+				setLon,
+				setLat,
+				setLocationName,
+        setQuery,
+        setForecastTemp,
+        setMainTemp,
+				setWeather,
+				setWeatherDesc,
+        setForecast,
+        setSourceLoaded,
+        langToTranslate,
+			);
+		}
+	}
+	recognition.lang = lang.appLang;
+
+	recognition.onstart = () => {
+    setQuery('');
+	}
 
 	// recognition.onresult = (e) => {
 	// 	const { resultIndex } = e;
@@ -73,24 +87,28 @@ const SearchBar = ({ setQuery, query, search, lang }) => {
 
 	return(
 		<div className="search-box">
-			<input id="searcher" type="text" className="search-bar" placeholder="Search..."
+      <input
+        id="searcher"
+        type="text"
+        className="search-bar"
+        placeholder={`${lang.search}...`}
 				onChange={e => setQuery(e.target.value)}
 				value={query}
 				onKeyPress={search}
 			/>
-			{/* <button className="play">
-				<FontAwesomeIcon icon={faPlay} onClick={readForecast} className="play-icon active-icon"/>
-				<FontAwesomeIcon icon={faStop} onClick={readForecast} className="stop-icon"/>
+			<button className="play">
+				<FontAwesomeIcon icon={faPlay} className="play-icon active-icon"/>
+				<FontAwesomeIcon icon={faStop} className="stop-icon"/>
 			</button>
 			<button className="mic">
-				<FontAwesomeIcon icon={faMicrophone} onClick={toggleSpeechRecorder.bind(null, recognition)}className="mic-icon"/>
-			</button> */}
+				<FontAwesomeIcon icon={faMicrophone} className="mic-icon"/>
+			</button>
 			<button
 				id="search-but"
 				className="search-but"
 				onClick={search}
 			>
-				{activeLang.search}
+				{lang.search}
 			</button>
 		</div>
 	);
