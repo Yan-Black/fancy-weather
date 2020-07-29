@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { appContext } from '../App';
 import './css/Clock.css';
 
-const Clock = ({ timeZone }) => {
+const Clock = () => {
+	const { payload: [,,,,,,, { timezone }] } = useContext(appContext);
 	const [date, setDate] = useState(new Date());
 
 	useEffect(() => {
@@ -10,10 +12,10 @@ const Clock = ({ timeZone }) => {
 		return function cleanup() {
 			clearInterval(timerID);
 		};
-	}, [timeZone]);
+	}, [timezone]);
 
 	const showLocaleTime = () => {
-		const utcOffset = (timeZone / 60) / 60;
+		const utcOffset = (timezone / 60) / 60;
 		const utc = date.getTime() + (date.getTimezoneOffset() * 60000);
 		const regionDate = new Date(utc + (3600000 * utcOffset));
 

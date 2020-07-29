@@ -1,18 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { weatherConditionsIcons } from '../constants/weatherIcons';
+import { appContext } from '../App';
 import './css/Weather.css';
 
-const WeatherBlock = ({ temp, desc, src, lang }) => {
-  const [weatherDescription, feelsLike, humidity, speed] = desc;
+const WeatherBlock = () => {
+	const {
+		payload: [
+			lang,
+			[temp, feelsLike],,,
+			weatherDescription,,,
+			{
+				weather: [{ icon }],
+				main: {
+					humidity,
+				},
+				wind: {
+					speed
+				}
+			},
+		],
+	} = useContext(appContext);
 
 	return (
 		<div className="weather-area">
 			<div className="current-temp">
 				<p className="main-temp">{`${temp.toFixed(0)}°`}</p>
-				<img className="mobile-icon" src={weatherConditionsIcons[src]} alt="icon"/>
+				<img className="mobile-icon" src={weatherConditionsIcons[icon]} alt="icon"/>
 			</div>
 			<div className="current-icon">
-				<img className="weather-icon" src={weatherConditionsIcons[src]} alt="icon"/>
+				<img className="weather-icon" src={weatherConditionsIcons[icon]} alt="icon"/>
 			</div>
 			<div className="current-description">
 				<ul className="description-list">

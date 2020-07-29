@@ -1,8 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import mapboxgl from 'mapbox-gl';
+import { appContext } from '../App';
 import './css/Map.css';
 
-const MapBlock = ({ lat: latitude, lng: longtitude, lang }) => {
+const MapBlock = () => {
+	const { payload: [ lang,,,,,,,, latitude, longtitude] } = useContext(appContext);
 	const [map, setMap] = useState(null);
 	const [zoom, setZoom] = useState(10);
 	const [long, setLong] = useState(longtitude);
@@ -12,9 +14,7 @@ const MapBlock = ({ lat: latitude, lng: longtitude, lang }) => {
 	useEffect(() => {
 		if (map) {
 			map.flyTo({ center: [longtitude, latitude], essential: true});
-			map.on('zoomend', function() {
-				map.resize();
-			});
+			map.on('zoomend', () => map.resize());
 			new mapboxgl.Marker()
 				.setLngLat([longtitude, latitude])
 				.addTo(map);
@@ -83,14 +83,14 @@ const MapBlock = ({ lat: latitude, lng: longtitude, lang }) => {
 						{lang.latitude}
 					</span>
 					{' '}
-					{getDMS(latitude, 'Latitude')}
+					{getDMS(lat, 'Latitude')}
 				</p>
 				<p className="prop">
 					<span>
 						{lang.longtitude}
 					</span>
 					{' '}
-					{getDMS(longtitude, 'Longtitude')}
+					{getDMS(long, 'Longtitude')}
 				</p>
 			</div>
 		</div>

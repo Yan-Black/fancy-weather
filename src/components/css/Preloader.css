@@ -42,16 +42,8 @@
     }
 }
 
-.preloader-fade-out {
-    animation: .5s fade linear;
-}
-
-@keyframes fade {
-    from {
-        opacity: 1;
-    } to {
-        opacity: 0;
-    }
+.preloader-close {
+    display: none;
 }
 
 @media (max-width: 768px) {

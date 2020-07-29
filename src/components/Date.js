@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { appContext } from '../App';
 import './css/Date.css';
 
-const RegionDate = ({ timeZone, lang }) => {
-  const [date, setDate] = useState(new Date());
+const RegionDate = () => {
+	const { payload: [lang,,,,,,, { timezone }] } = useContext(appContext);
+	const [date, setDate] = useState(new Date());
 
-	useEffect(() => setDate(new Date()), [timeZone]);
-
-	const utcOffset = (timeZone / 60) / 60;
+	const utcOffset = (timezone / 60) / 60;
 	const utc = date.getTime() + (date.getTimezoneOffset() * 60000);
 	const regionDate = new Date(utc + (3600000 * utcOffset));
 	const day = lang.daysShort[regionDate.getDay()];
@@ -14,7 +14,9 @@ const RegionDate = ({ timeZone, lang }) => {
 	const month = lang.monthes[regionDate.getMonth()];
 	const year = regionDate.getFullYear();
 
-	return(
+	useEffect(() => setDate(new Date()), [timezone]);
+
+	return (
 		<div className="date-block">
 			<span>
 				{day}

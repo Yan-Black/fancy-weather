@@ -7,40 +7,30 @@ import {
 	backgroundUrl,
 } from './api-urls';
 import { regex, forecastRegex } from './app-constants';
+import placeholder from '../assets/images/background.jpg';
 
 export const getUserLocation = async (
-  setLoading,
-  setLon,
-  setLat,
-  setLocationName,
-  setQuery,
-  setForecastTemp,
-  setMainTemp,
-  setWeather,
-  setWeatherDesc,
-  setForecast,
-  setSourceLoaded,
-  lang,
+	setLoading,
+	setQuery,
+	setLocationName,
+	setWeatherDesc,
+	setters,
+	lang,
 ) => {
 	try {
-    setLoading(true);
+		setLoading(true);
 		const rawResp = await fetch(userLocationUrl);
-    const resp = await rawResp.json();
-    const { city, country } = resp;
+		const resp = await rawResp.json();
+		const { city, country } = resp;
+		const locationName = `${city} ${country}`;
 		geoLocation(
-      setLoading,
-      `${city} ${country}`,
-      setLon,
-      setLat,
-      setLocationName,
-      setQuery,
-      setForecastTemp,
-      setMainTemp,
-      setWeather,
-      setWeatherDesc,
-      setForecast,
-      setSourceLoaded,
-      lang,
+			setLoading,
+			setQuery,
+			setLocationName,
+			setWeatherDesc,
+			locationName,
+			setters,
+			lang,
 		);
 	}
 	catch(err) {
@@ -49,54 +39,39 @@ export const getUserLocation = async (
 }
 
 export const geoLocation = async (
-  setLoading,
-	city,
-	setLon,
-	setLat,
-  setLocationName,
-  setQuery,
-  setForecastTemp,
-  setMainTemp,
-	setWeather,
+	setLoading,
+	setQuery,
+	setLocationName,
 	setWeatherDesc,
-  setForecast,
-  setSourceLoaded,
-  lang,
+	city,
+	setters,
+	lang,
 ) => {
 	try {
-    setLoading(true);
+		setLoading(true);
 		const rawResp = await fetch(geoLocationUrl(city));
-    const resp = await rawResp.json();
+		const resp = await rawResp.json();
 		const { results: [
 			{
-        formatted,
+				formatted,
 				geometry: { lat, lng },
 			}
 		]
-    } = resp;
-    const cityCountry = formatted.replace(regex, ',');
-		setLon(lng);
-		setLat(lat);
+		} = resp;
+		const locationName = formatted.replace(regex, ',');
+		const dataToResolve = [lng, lat];
 		getWeatherData(
 			lat,
 			lng,
-      setQuery,
-      setMainTemp,
-			setWeather,
-      setWeatherDesc,
-      lang,
-    );
-    getForecast(
-      lat,
-      lng,
-      setForecast,
-      setForecastTemp,
-      setLoading,
-      setSourceLoaded,
-    );
-		translateApiData(
-      cityCountry, setLocationName, lang,
-    );
+			dataToResolve,
+			setters,
+			lang,
+			setLoading,
+			setQuery,
+			setLocationName,
+			locationName,
+			setWeatherDesc,
+		);
 	}
 	catch(err) {
 		window.console.log(err);
@@ -105,32 +80,45 @@ export const geoLocation = async (
 
 export const getWeatherData = async (
 	lat,
-	lon,
-  setQuery,
-  setMainTemp,
-  setWeather,
-  setWeatherDesc,
-  lang,
+	lng,
+	dataToResolve,
+	setters,
+	lang,
+	setLoading,
+	setQuery,
+	setLocationName,
+	locationName,
+	setWeatherDesc,
 ) => {
 	try {
-		const rawResp = await fetch(geoWeatherUrl(lat, lon));
+		const rawResp = await fetch(geoWeatherUrl(lat, lng));
 		const resp = await rawResp.json();
 		const {
-      main: {
-        temp,
-        feels_like,
-      },
+			main: {
+				temp,
+				feels_like,
+			},
 			weather: [
 				{
-          description,
-        },
-      ],
-    } = resp;
-
-    setMainTemp([temp, feels_like]);
-		setWeather(resp);
-    setQuery('');
-		translateApiData(description, setWeatherDesc, lang);
+					description,
+				},
+			],
+		} = resp;
+		dataToResolve.push([temp, feels_like]);
+		dataToResolve.push(resp);
+		setQuery('');
+		getForecast(
+			lat,
+			lng,
+			dataToResolve,
+			setters,
+			lang,
+			setLoading,
+			setLocationName,
+			locationName,
+			setWeatherDesc,
+			description,
+		);
 	}
 	catch(err) {
 		window.console.log(err);
@@ -138,31 +126,44 @@ export const getWeatherData = async (
 }
 
 export const getForecast = async (
-  lat,
-  lon,
-  setForecast,
-  setForecastTemp,
-  setLoading,
-  setSourceLoaded,
+	lat,
+	lng,
+	dataToResolve,
+	setters,
+	lang,
+	setLoading,
+	setLocationName,
+	locationName,
+	setWeatherDesc,
+	description,
 ) => {
 	try {
-		const rawResp = await fetch(forecastUrl(lat, lon));
-    const resp = await rawResp.json();
-    const forecastList = resp.list.filter(({ dt_txt }) => forecastRegex.test(dt_txt));
-    const forecastValues = [];
-    forecastList.forEach(
-      ({ main: {temp_max, temp_min} }) => forecastValues.push(((temp_max + temp_min) / 2))
-    );
-    setForecastTemp(forecastValues);
-    setForecast(forecastList);
-    getBackImage(setSourceLoaded, setLoading);
+		const rawResp = await fetch(forecastUrl(lat, lng));
+		const resp = await rawResp.json();
+		const forecastList = resp.list.filter(({ dt_txt }) => forecastRegex.test(dt_txt));
+		const forecastValues = [];
+		forecastList.forEach(
+			({ main: {temp_max, temp_min} }) => forecastValues.push(((temp_max + temp_min) / 2))
+		);
+		dataToResolve.push(forecastValues);
+		dataToResolve.push(forecastList);
+		getBackImage(
+			dataToResolve,
+			setters,
+			setLoading,
+			setLocationName,
+			locationName,
+			setWeatherDesc,
+			description,
+			lang,
+		);
 	}
 	catch(err) {
 		window.console.log(err);
 	}
 }
 
-export	const translateApiData = async (data, setPropTranslate, lang) => {
+export const translateApiData = async (data, setPropTranslate, lang) => {
 	try {
 		const rawResp = await fetch(translateUrl(data, lang));
 		const resp = await rawResp.json();
@@ -175,27 +176,96 @@ export	const translateApiData = async (data, setPropTranslate, lang) => {
 	}
 }
 
-const LazyBackgroundLoader = (src, setSourceLoaded, setLoading) => {
+const LazyBackgroundLoader = (
+	src,
+	dataToResolve,
+	setters,
+	setLoading,
+	setLocationName,
+	locationName,
+	setWeatherDesc,
+	description,
+	lang,
+) => {
 	const img = new Image();
 	img.src = src;
-	img.onload = () => {
-    setSourceLoaded(src);
-    setLoading(false);
-  };
-  img.onerror = () => {
-    setLoading(false);
-  }
+	img.onload = async () => {
+		if (!dataToResolve) {
+			setters(src);
+			setLoading(false);
+		} else {
+			resolveAllData(
+				dataToResolve,
+				setters,
+				setLoading,
+				setLocationName,
+				locationName,
+				setWeatherDesc,
+				description,
+				lang,
+			);
+		}
+	};
+	img.onerror = () => {
+		setLoading(false);
+	}
 }
 
-export const getBackImage = async (setSourceLoaded, setLoading) => {
+export const getBackImage = async (
+	dataToResolve,
+	setters,
+	setLoading,
+	setLocationName,
+	locationName,
+	setWeatherDesc,
+	description,
+	lang,
+) => {
+	setLoading(true);
 	try {
 		const rawResp = await fetch(backgroundUrl);
 		const resp = await rawResp.json();
-		const { urls: { full } } = resp;
-		LazyBackgroundLoader(full, setSourceLoaded, setLoading);
+		const { urls: { regular } } = resp;
+		dataToResolve && dataToResolve.push(regular);
+		LazyBackgroundLoader(
+			regular,
+			dataToResolve,
+			setters,
+			setLoading,
+			setLocationName,
+			locationName,
+			setWeatherDesc,
+			description,
+			lang,
+		);
 	}
 	catch(err) {
-		window.console.log(err);
+		LazyBackgroundLoader(
+			placeholder,
+			dataToResolve,
+			setters,
+			setLoading,
+			setLocationName,
+			locationName,
+			setWeatherDesc,
+			description,
+			lang,
+		);
 	}
 }
 
+const resolveAllData = (
+	dataToResolve,
+	setters,
+	setLoading,
+	setLocationName,
+	locationName,
+	setWeatherDesc,
+	description,
+	lang,
+) => {
+	translateApiData(locationName, setLocationName, lang);
+	translateApiData(description, setWeatherDesc, lang);
+	setters.forEach((setter, i) => setter(dataToResolve[i]));
+	setLoading(false);
+}

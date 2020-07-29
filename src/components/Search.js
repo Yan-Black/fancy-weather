@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { geoLocation } from '../constants/api-requsets';
 import './css/Search.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMicrophone } from '@fortawesome/free-solid-svg-icons';
 import { faPlay, faStop } from '@fortawesome/free-solid-svg-icons';
+import { appContext } from '../App';
 import { readForecast } from '../constants/functionalConstants'
 import { toggleSpeechRecorder } from '../constants/functionalConstants';
 
@@ -12,44 +13,36 @@ export const recognition = new SpeechRecognition();
 export const phrase = new SpeechSynthesisUtterance();
 export const synth = window.speechSynthesis;
 
-const SearchBar = ({ setters, lang, query, setQuery }) => {
-  const langToTranslate = lang.select.toLowerCase();
-  const [
-    setLoading,
-    setLat,
-    setLon,
-    setLocationName,
-    setForecastTemp,
-    setMainTemp,
-    setWeather,
-    setWeatherDesc,
-    setForecast,
-    setSourceLoaded,
-  ] = setters;
+const SearchBar = () => {
+	const {
+		setters: [
+			setQuery,,,
+			setLat,
+			setLon,
+			setLocationName,
+			setForecastTemp,
+			setMainTemp,
+			setWeather,
+			setWeatherDesc,
+			setForecast,
+			setSourceLoaded,
+			setInfoLoading,
+		],
+		payload: [lang,,,,,query,],
+	} = useContext(appContext);
 
-  const search = (e) => {
+  const setters = [setLon, setLat, setMainTemp, setWeather, setForecastTemp, setForecast, setSourceLoaded];
+	const langToTranslate = lang.select.toLowerCase();
+
+	const search = (e) => {
 		if (e.key === 'Enter' || e.target.id === 'search-but') {
-			geoLocation(
-        setLoading,
-				query,
-				setLon,
-				setLat,
-				setLocationName,
-        setQuery,
-        setForecastTemp,
-        setMainTemp,
-				setWeather,
-				setWeatherDesc,
-        setForecast,
-        setSourceLoaded,
-        langToTranslate,
-			);
+			geoLocation(setInfoLoading, setQuery, setLocationName, setWeatherDesc, query, setters, langToTranslate);
 		}
 	}
 	recognition.lang = lang.appLang;
 
 	recognition.onstart = () => {
-    setQuery('');
+		setQuery('');
 	}
 
 	// recognition.onresult = (e) => {
@@ -87,11 +80,11 @@ const SearchBar = ({ setters, lang, query, setQuery }) => {
 
 	return(
 		<div className="search-box">
-      <input
-        id="searcher"
-        type="text"
-        className="search-bar"
-        placeholder={`${lang.search}...`}
+			<input
+				id="searcher"
+				type="text"
+				className="search-bar"
+				placeholder={`${lang.search}...`}
 				onChange={e => setQuery(e.target.value)}
 				value={query}
 				onKeyPress={search}

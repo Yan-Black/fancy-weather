@@ -17,7 +17,7 @@ body {
   transition: .4s ease-in-out;
 }
 
-main {
+.weather-wrapper {
   min-height: 100vh;
   background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.65));
   padding: 25px;
@@ -81,7 +81,7 @@ main {
 }
 
 @media (max-width: 500px) {
-  main {
+  .weather-wrapper {
     padding: 10px;
   }
 
