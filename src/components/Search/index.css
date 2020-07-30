@@ -7,7 +7,7 @@
     display: flex;
     height: 45px;
   }
-  
+
   .search-bar, .search-but{
     display: block;
     cursor: pointer;
@@ -25,7 +25,7 @@
     z-index: 1;
   }
 
-  
+
   .play, .mic {
     width: 10%;
     border-radius: none;
@@ -45,19 +45,16 @@
     font-size: 0.65vw;
   }
 
-  .play-icon, .stop-icon {
-    display: none;
-  }
-  
   .play-icon, .mic-icon, .stop-icon {
     color: #313131;
+    transition: .2s;
   }
-  
+
   .play-icon:hover, .stop-icon:hover, .mic-icon:hover {
     color: rgba(0, 95, 32, 0.8);
     cursor: pointer;
   }
-  
+
   .mic-active {
     color: rgba(0, 95, 32, 0.8);
     animation: .7s scale infinite linear;
@@ -81,7 +78,7 @@
     color: #FFF;
     width: 20%;
   }
-  
+
   .search-but:hover {
     background-color: rgba(27, 27, 27, 0.7);
   }
@@ -90,7 +87,7 @@
     .search-bar, .search-but {
       font-size: 1.5vw;
     }
-    
+
     .search-box {
       width: 45%;
     }
@@ -98,7 +95,7 @@
     .mic {
       font-size: 1.25vw;
     }
-  
+
     .play {
       font-size: 1.05vw;
     }
@@ -108,7 +105,7 @@
     .search-bar, .search-but {
       font-size: 2vw;
     }
-    
+
     .search-box {
       width: 55%;
     }
@@ -116,7 +113,7 @@
     .mic {
       font-size: 1.55vw;
     }
-  
+
     .play {
       font-size: 1.35vw;
     }
@@ -137,7 +134,7 @@
   .search-bar, .search-but {
     font-size: 4vw;
   }
-  
+
   .search-box {
     width: 100%;
   }

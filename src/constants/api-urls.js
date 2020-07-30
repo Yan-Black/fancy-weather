@@ -1,9 +1,9 @@
 import {
-	BACKGROUND_API,
-	ID_API,
-	WEATHER_API,
-	TRANSLATE_API,
-	GEOLOCATION_API
+  BACKGROUND_API,
+  ID_API,
+  WEATHER_API,
+  TRANSLATE_API,
+  GEOLOCATION_API
 } from './api-keys';
 import { en } from './app-langs';
 import { celsius } from './app-constants';
