@@ -107,11 +107,15 @@ const SearchBar = () => {
 
   	if (transcript === 'quieter' || transcript === 'тише') {
       volume > 0.1 ? setVolume(volume - 0.1) : setVolume(volume);
+      recognition.stop();
+      setMicActive(!micActive);
   		return;
   	}
 
   	if (transcript === 'louder' || transcript === 'громче') {
       volume < 1 ? setVolume(volume + 0.1) : setVolume(volume);
+      recognition.stop();
+      setMicActive(!micActive);
   		return;
     }
 
