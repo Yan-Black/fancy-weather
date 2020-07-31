@@ -1,6 +1,7 @@
 export const en = {
-  appLang: 'en_EN',
+  appLang: 'en-US',
   select: 'EN',
+  loading: 'Loading...',
   feelsLike: 'feels like: ' ,
   humidity: 'humidity: ' ,
   wind: 'wind: ' ,
@@ -12,19 +13,14 @@ export const en = {
     'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday',
     'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
   ],
-  daysShort: [
-    'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat',
-    'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'
-  ],
-  monthes: [
-    'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December',
-    'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
-  ]
+  daysShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+  monthes: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 };
 
 export const ru = {
-  appLang: 'ru_RU',
+  appLang: 'ru-RU',
   select: 'RU',
+  loading: 'Загрузка...',
   feelsLike: 'ощущается как: ',
   humidity: 'влажность: ',
   wind: 'ветер: ',
@@ -36,19 +32,14 @@ export const ru = {
     'Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота',
     'Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'
   ],
-  daysShort: [
-    'Вск', 'Пнд', 'Втр', 'Срд', 'Чтв', 'Птн', 'Сбт',
-    'Вск', 'Пнд', 'Втр', 'Срд', 'Чтв', 'Птн', 'Сбт'
-  ],
-  monthes: [
-    'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь',
-    'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
-  ]
+  daysShort: ['Вск', 'Пнд', 'Втр', 'Срд', 'Чтв', 'Птн', 'Сбт'],
+  monthes: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь']
 }
 
 export const be = {
-  appLang: 'be_BE',
+  appLang: 'be-BE',
   select: 'BE',
+  loading: 'Загрузка...',
   feelsLike: 'адчуваецца як: ',
   humidity: 'вiльготнасць: ',
   wind: 'вецер: ',
@@ -60,14 +51,8 @@ export const be = {
     'Нядзеля', 'Панядзелак', 'Аўторак', 'Серада', 'Чацвер', 'Пятнiца', 'Субота',
     'Нядзеля', 'Панядзелак', 'Аўторак', 'Серада', 'Чацвер', 'Пятнiца', 'Субота'
   ],
-  daysShort: [
-    'Няд', 'Пнд', 'Аўтк', 'Сер', 'Чцв', 'Пятi', 'Суб',
-    'Няд', 'Пнд', 'Аўтк', 'Сер', 'Чцв', 'Пятi', 'Суб'
-  ],
-  monthes: [
-    'Студзень', 'Люты', 'Сакавiк', 'Красавiк', 'Май', 'Червень', 'Лiпень', 'Жнiвень', 'Верасень', 'Кастрычнiк', 'Лiстапад', 'Снежань',
-    'Студзень', 'Люты', 'Сакавiк', 'Красавiк', 'Май', 'Червень', 'Лiпень', 'Жнiвень', 'Верасень', 'Кастрычнiк', 'Лiстапад', 'Снежань'
-  ]
+  daysShort: ['Няд', 'Пнд', 'Аўтк', 'Сер', 'Чцв', 'Пят', 'Суб'],
+  monthes: ['Студзень', 'Люты', 'Сакавiк', 'Красавiк', 'Май', 'Червень', 'Лiпень', 'Жнiвень', 'Верасень', 'Кастрычнiк', 'Лiстапад', 'Снежань']
 }
 
 export const langSelectors = [

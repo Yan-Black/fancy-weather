@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { appContext } from '../../../App';
+import { appContext } from '../../App';
 import './index.css';
 
 const RegionDate = () => {
-  const { payload: [lang,,,,,,, { timezone }] } = useContext(appContext);
+  const { payload: [, lang,, { timezone }] } = useContext(appContext);
   const [date, setDate] = useState(new Date());
 
   const utcOffset = (timezone / 60) / 60;

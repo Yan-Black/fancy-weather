@@ -14,7 +14,12 @@ export const phrase = new SpeechSynthesisUtterance();
 export const synth = window.speechSynthesis;
 export const ruForecast = (
   temp, weatherDescription, feelsLike, humidity, speed,
-) => `Сегодня ${temp}, ${weatherDescription}, ощущается как ${feelsLike}, влажность ${humidity}, скорость ветра ${speed} метров в секунду`;
+) => `Сегодня ${Math.round(temp)}°, ${weatherDescription}, ощущается как ${Math.floor(feelsLike)}°, влажность ${humidity}%, скорость ветра ${speed} метров в секунду`;
 export const enForecast = (
   temp, weatherDescription, feelsLike, humidity, speed,
-) =>`Today is ${temp}, ${weatherDescription}, feels like ${feelsLike}, humidity is ${humidity}, wind speed is  ${speed} meters in a second`;
+) =>`Today is ${Math.round(temp)}°, ${weatherDescription}, feels like ${Math.floor(feelsLike)}°, humidity is ${humidity}%, wind speed is  ${speed} meters in a second`;
+
+export const errData = {
+  open: false,
+  message: '',
+};

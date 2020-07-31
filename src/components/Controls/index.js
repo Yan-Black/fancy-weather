@@ -1,38 +1,45 @@
 import React, { useState, useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDown, faSyncAlt } from '@fortawesome/free-solid-svg-icons';
-import { celsius, farenheit, convertToImperial, convertToMetric, defaultUnits } from '../../constants/app-constants';
+import {
+  celsius,
+  farenheit,
+  convertToImperial,
+  convertToMetric,
+  defaultUnits,
+} from '../../constants/app-constants';
 import { translateApiData, getBackImage } from '../../constants/api-requsets';
 import { en, ru, be, langSelectors } from '../../constants/app-langs';
-import { appContext } from '../../App';
+import { weatherCodesRu, weatherCodesEng, weatherCodesBel } from '../../constants/app-weather-codes';
+import { appContext } from '../App';
 import './index.css';
 
 const Controls = () => {
   const [units, setUnits] = useState(defaultUnits);
   const [isListOpen, setListOpen] = useState(false);
+  const [imageLoading, setImageLoading] = useState(false);
   const {
-    setters: [,,
-      setLang,,,
-      setLocationName,
-      setForecastTemp,
-      setMainTemp,,
-      setWeatherDesc,,
-      setSourceLoaded,
-      setInfoLoading,
-      setErrorMessage,
-      setOpenErrorModal,
+    setters: [,
+      setLang,
+      setErr,
+      setWeatherData,
+      setSourceLoaded,,,
     ],
-    payload: [
-      lang,
-      mainTemp,
-      forecastTemp,
-      locationName,
-      weatherDescription,,,,,,
-      infoLoading,
+    payload: [,
+      lang,,
+      weatherData,
     ],
   } = useContext(appContext);
 
   const openlist = () => setListOpen(!isListOpen);
+  const { cod } = weatherData;
+
+  const description =
+  lang.select === 'EN'
+    ? weatherCodesEng[cod]
+    : lang.select === 'RU'
+      ? weatherCodesRu[cod]
+      : weatherCodesBel[cod];
 
   const selectLang = (e) => {
     const { target } = e;
@@ -40,21 +47,15 @@ const Controls = () => {
 	  switch (langToApply) {
     case 'en':
       localStorage.setItem('appLang', langToApply);
-      setLang(en);
-      translateApiData(weatherDescription, setWeatherDesc, langToApply, setErrorMessage, setOpenErrorModal);
-      translateApiData(locationName, setLocationName, langToApply, setErrorMessage, setOpenErrorModal);
+      translateApiData(weatherData, setWeatherData, langToApply, setErr, setLang, en);
       break;
     case 'ru':
       localStorage.setItem('appLang', langToApply);
-      setLang(ru);
-      translateApiData(weatherDescription, setWeatherDesc, langToApply, setErrorMessage, setOpenErrorModal);
-      translateApiData(locationName, setLocationName, langToApply, setErrorMessage, setOpenErrorModal);
+      translateApiData(weatherData, setWeatherData, langToApply, setErr, setLang, ru);
       break;
     case 'be':
       localStorage.setItem('appLang', langToApply);
-      setLang(be);
-      translateApiData(weatherDescription, setWeatherDesc, langToApply, setErrorMessage, setOpenErrorModal);
-      translateApiData(locationName, setLocationName, langToApply, setErrorMessage, setOpenErrorModal);
+      translateApiData(weatherData, setWeatherData, langToApply, setErr, setLang, be);
 		  break;
 	  default: setLang(en);
 	  }
@@ -63,25 +64,41 @@ const Controls = () => {
   const changeActiveUnits = () => {
     if (units === celsius) {
       setUnits(farenheit);
-      setForecastTemp(forecastTemp.map(convertToImperial));
-      setMainTemp(mainTemp.map(convertToImperial));
+      const imperialData = { ...weatherData };
+      const temps = imperialData.forecastTemps.map(convertToImperial);
+      imperialData.forecastTemps = temps;
+      imperialData.temp = convertToImperial(imperialData.temp);
+      imperialData.feelsLike = convertToImperial(imperialData.feelsLike);
+      setWeatherData(imperialData);
       localStorage.setItem('appUnits', farenheit);
     }	else {
       setUnits(celsius);
-      setForecastTemp(forecastTemp.map(convertToMetric));
-      setMainTemp(mainTemp.map(convertToMetric));
+      const metricData = { ...weatherData };
+      const temps = metricData.forecastTemps.map(convertToMetric);
+      metricData.forecastTemps = temps;
+      metricData.temp = convertToMetric(metricData.temp);
+      metricData.feelsLike = convertToMetric(metricData.feelsLike);
+      setWeatherData(metricData);
       localStorage.setItem('appUnits', celsius);
     }
   };
 
-  const imageHandler = () => getBackImage(null, setSourceLoaded, setInfoLoading);
+  const imageHandler = () => getBackImage(
+    setImageLoading,
+    setErr,
+    weatherData,
+    setWeatherData,
+    setSourceLoaded,
+    null,
+    description,
+  );
 
   return (
     <div className="controls">
       <div className="change-image" onClick={imageHandler} >
         <FontAwesomeIcon
           icon={faSyncAlt}
-          className={infoLoading ? 'rotate-icon load-image' : 'rotate-icon'}
+          className={imageLoading ? 'rotate-icon load-image' : 'rotate-icon'}
         />
       </div>
       <div className="change-lang" onClick={openlist}>

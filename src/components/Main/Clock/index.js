@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { appContext } from '../../../App';
+import { appContext } from '../../App';
 import './index.css';
 
 const Clock = () => {
-  const { payload: [,,,,,,, { timezone }] } = useContext(appContext);
+  const { payload: [,,, { timezone }] } = useContext(appContext);
   const [date, setDate] = useState(new Date());
 
   useEffect(() => {

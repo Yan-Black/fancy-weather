@@ -1,13 +1,13 @@
 import React, { useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import { appContext } from '../../App';
+import { appContext } from '../App';
 import './index.css';
 
 const Modal = () => {
-  const { err: [setOpenErrorModal, errorMessage] } = useContext(appContext);
-  const modalClickHandler = () => setOpenErrorModal(false);
-  const modalKeyHandler = (e) => e.key === 'Escape' && setOpenErrorModal(false);
+  const { err: [err, setErr] } = useContext(appContext);
+  const modalClickHandler = () => setErr({ err: '', open: false });
+  const modalKeyHandler = (e) => e.key === 'Escape' && setErr({ err: '', open: false });
   return (
     <div
       className="modal-wrapper"
@@ -26,7 +26,7 @@ const Modal = () => {
         </div>
         <div className="modal-message">
           <span className="modal-error">
-            {errorMessage}
+            {err.message}
           </span>
         </div>
       </div>

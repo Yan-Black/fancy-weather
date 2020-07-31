@@ -125,10 +125,11 @@
     .controls {
         width: 100%;
         justify-content: flex-start;
+        margin-bottom: 45px;
     }
 
     .change-to-farenheit, .change-to-celsius {
-        font-size: 4vw;
+        font-size: 5vw;
     }
 
     .change-image, .change-lang, .change-units {
@@ -143,4 +144,10 @@
     .lang-list > li {
         margin-right: 3vw;
     }
+}
+
+@media (max-width: 375px) {
+  .change-to-farenheit, .change-to-celsius {
+      font-size: 6vw;
+  }
 }

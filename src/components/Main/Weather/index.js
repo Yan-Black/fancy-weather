@@ -1,25 +1,30 @@
 import React, { useContext } from 'react';
-import { weatherConditionsIcons } from '../../../constants/weatherIcons';
-import { appContext } from '../../../App';
+import { weatherCodesRu, weatherCodesEng, weatherCodesBel } from '../../../constants/app-weather-codes';
+import { weatherConditionsIcons } from '../../../constants/app-weather-icons';
+import { appContext } from '../../App';
 import './index.css';
 
 const WeatherBlock = () => {
   const {
-    payload: [
-      lang,
-      [temp, feelsLike],,,
-      weatherDescription,,,
+    payload: [,
+      lang,,
       {
-        weather: [{ icon }],
-        main: {
-          humidity,
-        },
-        wind: {
-          speed
-        }
+        temp,
+        icon,
+        cod,
+        feelsLike,
+        humidity,
+        speed,
       },
     ],
   } = useContext(appContext);
+
+  const description =
+  lang.select === 'EN'
+    ? weatherCodesEng[cod]
+    : lang.select === 'RU'
+      ? weatherCodesRu[cod]
+      : weatherCodesBel[cod];
 
   return (
     <div className="weather-area">
@@ -32,7 +37,7 @@ const WeatherBlock = () => {
       </div>
       <div className="current-description">
         <ul className="description-list">
-          <li className="weather-state">{weatherDescription}</li>
+          <li className="weather-state">{description}</li>
           <li>
             <span>
               {lang.feelsLike}

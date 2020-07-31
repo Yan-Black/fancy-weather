@@ -15,4 +15,4 @@ export const geoLocationUrl = (query) => `${GEOLOCATION_API.base}json?q=${query}
 export const geoWeatherUrl = (lat, lon) => `${WEATHER_API.base}weather?lat=${lat}&lon=${lon}&units=${appUnits || celsius}&appid=${WEATHER_API.key}`;
 export const translateUrl = (data, lang) => `${TRANSLATE_API.base}tr.json/translate?key=${TRANSLATE_API.key}&text=${data}&lang=${lang || en.select.toLowerCase()}`;
 export const forecastUrl = (lat, lon) => `${WEATHER_API.base}forecast?lat=${lat}&lon=${lon}&units=${appUnits || celsius}&appid=${WEATHER_API.key}`;
-export const backgroundUrl = `${BACKGROUND_API.base}/random?orientation=landscape&per_page=1&featured=nature&query=Minsk,summer,day&client_id=${BACKGROUND_API.key}`;
+export const backgroundUrl = (location, description) => `${BACKGROUND_API.base}/random?orientation=landscape&per_page=1&featured=nature&query=${location},${description}&client_id=${BACKGROUND_API.key}`;

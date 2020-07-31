@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import mapboxgl from 'mapbox-gl';
-import { appContext } from '../../../App';
+import { appContext } from '../../App';
 import './index.css';
 
 const MapBlock = () => {
-  const { payload: [ lang,,,,,,,, latitude, longtitude] } = useContext(appContext);
+  const { payload: [,lang,, { geometry: { lat: latitude, lng: longtitude } }] } = useContext(appContext);
   const [map, setMap] = useState(null);
   const [zoom, setZoom] = useState(10);
   const [long, setLong] = useState(longtitude);
@@ -70,9 +70,8 @@ const MapBlock = () => {
     const degrees = truncate(absDD);
     const minutes = truncate((absDD - degrees) * 60);
     const seconds = ((absDD - degrees - minutes / 60) * Math.pow(60, 2)).toFixed(2);
-    const dmsArray = [degrees, minutes, seconds, hemisphere];
 
-    return `${dmsArray[0]}°${dmsArray[1]}'${dmsArray[2]}" ${dmsArray[3]}`;
+    return `${degrees}°${minutes}'${seconds}" ${hemisphere}`;
   }
   return (
     <div className="map-section">

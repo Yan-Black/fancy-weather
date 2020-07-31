@@ -36,6 +36,14 @@
     z-index: 1;
   }
 
+  .play:focus, .mic:focus {
+    outline: none;
+  }
+
+  .play:active, .mic:active {
+    outline: none;
+  }
+
   .mic {
     font-size: 0.85vw;
   }

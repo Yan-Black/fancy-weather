@@ -6,17 +6,15 @@ import {
   translateUrl,
   backgroundUrl,
 } from './api-urls';
-import { regex, forecastRegex } from './app-constants';
+import { regex, forecastRegex, errData } from './app-constants';
 import placeholder from '../assets/images/background.jpg';
 
 export const getUserLocation = async (
   setLoading,
   setQuery,
-  setLocationName,
-  setWeatherDesc,
-  setErrorMessage,
-  setOpenErrorModal,
-  setters,
+  setErr,
+  setWeatherData,
+  setSourceLoaded,
   lang,
 ) => {
   try {
@@ -26,38 +24,36 @@ export const getUserLocation = async (
     const { city, country } = resp;
     const locationName = `${city} ${country}`;
     geoLocation(
+      locationName,
       setLoading,
       setQuery,
-      setLocationName,
-      setWeatherDesc,
-      setErrorMessage,
-      setOpenErrorModal,
-      locationName,
-      setters,
+      setErr,
+      setWeatherData,
+      setSourceLoaded,
       lang,
     );
   }
   catch {
     setLoading(false);
-    setOpenErrorModal(true);
-    setErrorMessage('Rate limit exceeded');
+    const err = { ...errData };
+    err.open = true;
+    err.message = 'Rate limit exceeded';
+    setErr(err);
   }
 }
 
 export const geoLocation = async (
+  location,
   setLoading,
   setQuery,
-  setLocationName,
-  setWeatherDesc,
-  setErrorMessage,
-  setOpenErrorModal,
-  city,
-  setters,
+  setErr,
+  setWeatherData,
+  setSourceLoaded,
   lang,
 ) => {
   try {
     setLoading(true);
-    const rawResp = await fetch(geoLocationUrl(city));
+    const rawResp = await fetch(geoLocationUrl(location));
     const resp = await rawResp.json();
     const { results: [
       {
@@ -67,44 +63,40 @@ export const geoLocation = async (
     ]
     } = resp;
     const locationName = formatted.replace(regex, ',');
-    const dataToResolve = [lng, lat];
+    const weatherData = {
+      location: locationName,
+      geometry: { lat, lng },
+    }
     getWeatherData(
-      lat,
-      lng,
-      dataToResolve,
-      setters,
-      lang,
       setLoading,
       setQuery,
-      setLocationName,
-      locationName,
-      setWeatherDesc,
-      setErrorMessage,
-      setOpenErrorModal,
+      setErr,
+      weatherData,
+      setWeatherData,
+      setSourceLoaded,
+      lang,
     );
   }
   catch {
     setLoading(false);
-    setErrorMessage('city was not found');
     setQuery('');
-    setOpenErrorModal(true);
+    const err = { ...errData };
+    err.open = true;
+    err.message = 'city was not found';
+    setErr(err);
   }
 }
 
 export const getWeatherData = async (
-  lat,
-  lng,
-  dataToResolve,
-  setters,
-  lang,
   setLoading,
   setQuery,
-  setLocationName,
-  locationName,
-  setWeatherDesc,
-  setErrorMessage,
-  setOpenErrorModal,
+  setErr,
+  weatherData,
+  setWeatherData,
+  setSourceLoaded,
+  lang,
 ) => {
+  const { geometry: { lat, lng } } = weatherData;
   try {
     const rawResp = await fetch(geoWeatherUrl(lat, lng));
     const resp = await rawResp.json();
@@ -112,52 +104,53 @@ export const getWeatherData = async (
       main: {
         temp,
         feels_like,
+        humidity,
       },
-      weather: [
-        {
-          description,
-        },
-      ],
+      weather: [{ description, icon, id }],
+      wind: {
+        speed,
+      },
+      timezone,
     } = resp;
-    dataToResolve.push([temp, feels_like]);
-    dataToResolve.push(resp);
+
+    weatherData.temp = temp;
+    weatherData.feelsLike = feels_like;
+    weatherData.cod = id;
+    weatherData.humidity = humidity;
+    weatherData.speed = speed;
+    weatherData.timezone = timezone;
+    weatherData.icon = icon;
+
     setQuery('');
     getForecast(
-      lat,
-      lng,
-      dataToResolve,
-      setters,
-      lang,
       setLoading,
-      setLocationName,
-      locationName,
-      setWeatherDesc,
+      setErr,
+      weatherData,
+      setWeatherData,
+      setSourceLoaded,
+      lang,
       description,
-      setErrorMessage,
-      setOpenErrorModal,
     );
   }
   catch {
     setLoading(false);
-    setOpenErrorModal(true);
-    setErrorMessage('invalid API key or weather info is unavailable');
+    const err = { ...errData };
+    err.open = true;
+    err.message = 'invalid API key or weather info is unavailable';
+    setErr(err);
   }
 }
 
 export const getForecast = async (
-  lat,
-  lng,
-  dataToResolve,
-  setters,
-  lang,
   setLoading,
-  setLocationName,
-  locationName,
-  setWeatherDesc,
+  setErr,
+  weatherData,
+  setWeatherData,
+  setSourceLoaded,
+  lang,
   description,
-  setErrorMessage,
-  setOpenErrorModal,
 ) => {
+  const { geometry: { lat, lng } } = weatherData;
   try {
     const rawResp = await fetch(forecastUrl(lat, lng));
     const resp = await rawResp.json();
@@ -166,81 +159,74 @@ export const getForecast = async (
     forecastList.forEach(
       ({ main: {temp_max, temp_min} }) => forecastValues.push(((temp_max + temp_min) / 2))
     );
-    dataToResolve.push(forecastValues);
-    dataToResolve.push(forecastList);
+    weatherData.forecast = forecastList;
+    weatherData.forecastTemps = forecastValues;
     getBackImage(
-      dataToResolve,
-      setters,
       setLoading,
-      setLocationName,
-      locationName,
-      setWeatherDesc,
-      description,
+      setErr,
+      weatherData,
+      setWeatherData,
+      setSourceLoaded,
       lang,
-      setErrorMessage,
-      setOpenErrorModal,
+      description,
     );
   }
   catch {
     setLoading(false);
-    setOpenErrorModal(true);
-    setErrorMessage('invalid API key or weather info is unavailable');
+    const err = { ...errData };
+    err.open = true;
+    err.message = 'invalid API key or weather info is unavailable';
+    setErr(err);
   }
 }
 
 export const translateApiData = async (
-  data,
-  setPropTranslate,
+  weatherData,
+  setWeatherData,
   lang,
-  setErrorMessage,
-  setOpenErrorModal,
+  setErr,
+  setLang,
+  langObj,
 ) => {
+  const { location } = weatherData;
   try {
-    const rawResp = await fetch(translateUrl(data, lang));
+    const rawResp = await fetch(translateUrl(location, lang));
     const resp = await rawResp.json();
     const { text } = resp;
     const [translate] = text;
-    setPropTranslate(translate);
+    const newData = { ...weatherData };
+    newData.location = translate;
+    setWeatherData(newData);
+    setLang && setLang(langObj);
   }
   catch {
-    setErrorMessage('translate services is unavailable');
-    setOpenErrorModal(true);
+    const err = { ...errData };
+    err.open = true;
+    err.message = 'translate services is unavailable';
+    setErr(err);
   }
 }
 
 const LazyBackgroundLoader = (
   src,
-  dataToResolve,
-  setters,
   setLoading,
-  setLocationName,
-  locationName,
-  setWeatherDesc,
-  description,
+  setErr,
+  weatherData,
+  setWeatherData,
+  setSourceLoaded,
   lang,
-  setErrorMessage,
-  setOpenErrorModal,
 ) => {
   const img = new Image();
   img.src = src;
   img.onload = async () => {
-    if (!dataToResolve) {
-      setters(src);
-      setLoading(false);
-    } else {
-      resolveAllData(
-        dataToResolve,
-        setters,
-        setLoading,
-        setLocationName,
-        locationName,
-        setWeatherDesc,
-        description,
-        lang,
-        setErrorMessage,
-        setOpenErrorModal,
-      );
-    }
+    resolveAllData(
+      setLoading,
+      setErr,
+      weatherData,
+      setWeatherData,
+      setSourceLoaded,
+      lang,
+    );
   };
   img.onerror = () => {
     setLoading(false);
@@ -248,82 +234,59 @@ const LazyBackgroundLoader = (
 }
 
 export const getBackImage = async (
-  dataToResolve,
-  setters,
   setLoading,
-  setLocationName,
-  locationName,
-  setWeatherDesc,
-  description,
+  setErr,
+  weatherData,
+  setWeatherData,
+  setSourceLoaded,
   lang,
-  setErrorMessage,
-  setOpenErrorModal,
+  description,
 ) => {
   setLoading(true);
   try {
-    const rawResp = await fetch(backgroundUrl);
+    const { location } = weatherData;
+    const rawResp = await fetch(backgroundUrl(location, description));
     const resp = await rawResp.json();
     const { urls: { regular } } = resp;
-    dataToResolve && dataToResolve.push(regular);
+    weatherData.imageSrc = regular;
     LazyBackgroundLoader(
       regular,
-      dataToResolve,
-      setters,
       setLoading,
-      setLocationName,
-      locationName,
-      setWeatherDesc,
-      description,
+      setErr,
+      weatherData,
+      setWeatherData,
+      setSourceLoaded,
       lang,
-      setErrorMessage,
-      setOpenErrorModal,
     );
   }
   catch {
-    setErrorMessage('images limit 50/hour is exceeded');
-    setOpenErrorModal(true);
+    const err = { ...errData };
+    err.open = true;
+    err.message = 'images limit 50/hour is exceeded';
+    setErr(err);
     LazyBackgroundLoader(
       placeholder,
-      dataToResolve,
-      setters,
       setLoading,
-      setLocationName,
-      locationName,
-      setWeatherDesc,
-      description,
+      setErr,
+      weatherData,
+      setWeatherData,
+      setSourceLoaded,
       lang,
-      setErrorMessage,
-      setOpenErrorModal,
     );
   }
 }
 
 const resolveAllData = (
-  dataToResolve,
-  setters,
   setLoading,
-  setLocationName,
-  locationName,
-  setWeatherDesc,
-  description,
+  setErr,
+  weatherData,
+  setWeatherData,
+  setSourceLoaded,
   lang,
-  setErrorMessage,
-  setOpenErrorModal,
 ) => {
-  translateApiData(
-    locationName,
-    setLocationName,
-    lang,
-    setErrorMessage,
-    setOpenErrorModal,
-  );
-  translateApiData(
-    description,
-    setWeatherDesc,
-    lang,
-    setErrorMessage,
-    setOpenErrorModal,
-  );
-  setters.forEach((setter, i) => setter(dataToResolve[i]));
+  const { imageSrc } = weatherData;
+  lang && translateApiData(weatherData, setWeatherData, lang, setErr);
+  setSourceLoaded(imageSrc);
+  setWeatherData(weatherData);
   setLoading(false);
 }

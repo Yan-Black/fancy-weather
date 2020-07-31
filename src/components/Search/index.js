@@ -4,38 +4,28 @@ import { faMicrophone } from '@fortawesome/free-solid-svg-icons';
 import { faPlay, faStop } from '@fortawesome/free-solid-svg-icons';
 import { geoLocation } from '../../constants/api-requsets';
 import { recognition, phrase, synth, ruForecast, enForecast } from '../../constants/app-constants';
-import { appContext } from '../../App';
+import { weatherCodesRu, weatherCodesEng, weatherCodesBel } from '../../constants/app-weather-codes';
+import { appContext } from '../App';
 import './index.css';
 
 const SearchBar = () => {
   const {
     setters: [
-      setQuery,,,
-      setLat,
-      setLon,
-      setLocationName,
-      setForecastTemp,
-      setMainTemp,
-      setWeather,
-      setWeatherDesc,
-      setForecast,
-      setSourceLoaded,
+      setQuery,,
+      setErr,
+      setWeatherData,
+      setSourceLoaded,,
       setInfoLoading,
-      setErrorMessage,
-      setOpenErrorModal,
     ],
     payload: [
-      lang,
-      [temp, feelsLike],,,
-      weatherDescription,
-      query,,
+      query,
+      lang,,
       {
-        main: {
-          humidity,
-        },
-        wind: {
-          speed
-        }
+        cod,
+        temp,
+        feelsLike,
+        humidity,
+        speed,
       },
     ],
   } = useContext(appContext);
@@ -43,39 +33,40 @@ const SearchBar = () => {
   const [micActive, setMicActive] = useState(false);
   const [playBtnActive, setPlayBtnActive] = useState(false);
   const [volume, setVolume] = useState(0.5);
-  const setters = [
-    setLon, setLat, setMainTemp, setWeather, setForecastTemp, setForecast, setSourceLoaded,
-  ];
 
-  recognition.lang = lang.appLang
+  phrase.lang = lang.appLang;
+  recognition.lang = lang.appLang;
+  const description =
+  lang.select === 'EN'
+    ? weatherCodesEng[cod]
+    : lang.select === 'RU'
+      ? weatherCodesRu[cod]
+      : weatherCodesBel[cod];
   const langToTranslate = lang.select.toLowerCase();
 
   const search = (e) => {
     if (e.key === 'Enter' || e.target.id === 'search-but') {
       geoLocation(
+        query,
         setInfoLoading,
         setQuery,
-        setLocationName,
-        setWeatherDesc,
-        setErrorMessage,
-        setOpenErrorModal,
-        query,
-        setters,
+        setErr,
+        setWeatherData,
+        setSourceLoaded,
         langToTranslate,
       );
     }
   }
 
   const readForecast = (
-    temp, weatherDescription, feelsLike, humidity, speed
+    temp, description, feelsLike, humidity, speed
   ) => {
-    phrase.text = lang.appLang === 'en_EN'
-      ? enForecast(temp, weatherDescription, feelsLike, humidity, speed)
-      : ruForecast(temp, weatherDescription, feelsLike, humidity, speed);
+    phrase.text = lang.appLang === 'en-US'
+      ? enForecast(temp, description, feelsLike, humidity, speed)
+      : ruForecast(temp, description, feelsLike, humidity, speed);
     phrase.volume = volume;
     synth.speak(phrase);
-    phrase.onend = () => setPlayBtnActive(!playBtnActive);
-    synth.cancel();
+    phrase.onend = () => setPlayBtnActive(false);
   }
 
   const toggleSpeechRecorder = () => {
@@ -86,10 +77,13 @@ const SearchBar = () => {
   }
 
   const toggleAudio = () => {
-    setPlayBtnActive(!playBtnActive);
-    playBtnActive
-      ? readForecast(temp, weatherDescription, feelsLike, humidity, speed)
-      : synth.cancel();
+    if(!playBtnActive) {
+      setPlayBtnActive(true);
+      readForecast(temp, description, feelsLike, humidity, speed);
+    } else {
+      synth.cancel();
+      setPlayBtnActive(false);
+    }
   }
 
   recognition.onstart = () => setQuery('');
@@ -101,7 +95,7 @@ const SearchBar = () => {
       recognition.stop();
       setMicActive(!micActive);
       setPlayBtnActive(true);
-      readForecast(temp, weatherDescription, feelsLike, humidity, speed);
+      readForecast(temp, description, feelsLike, humidity, speed);
   		return;
     }
 
@@ -123,14 +117,12 @@ const SearchBar = () => {
     setMicActive(!micActive);
     recognition.stop();
     geoLocation(
+      transcript,
       setInfoLoading,
       setQuery,
-      setLocationName,
-      setWeatherDesc,
-      setErrorMessage,
-      setOpenErrorModal,
-      transcript,
-      setters,
+      setErr,
+      setWeatherData,
+      setSourceLoaded,
       langToTranslate,
     );
   }
