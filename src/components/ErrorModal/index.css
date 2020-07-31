@@ -1,0 +1,115 @@
+.modal-wrapper {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #0008;
+  z-index: 5;
+}
+
+.modal-container {
+  width: 25%;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.7);
+  filter: drop-shadow(0 0 10px black);
+  animation: drop .5s linear;
+}
+
+.modal-error {
+  color: rgba(124, 0, 0, 1);
+}
+
+@keyframes drop {
+  form {
+    transform: translateX(-100%);
+    opacity: 0;
+  } to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.close-modal {
+  width: 2vw;
+  height: 2vw;
+  font-size: 1.2vw;
+  background: none;
+  color: #fff;
+  border-radius: 0 5px 0 0;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  transition: .1s;
+}
+
+.close-modal:focus, .close-modal:active {
+  outline: none;
+}
+
+.close-modal:active {
+  opacity: 0.5;
+}
+
+.close-modal:hover {
+  color: #0008;
+}
+
+.modal-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2vw;
+}
+
+@media (max-width: 1024px) {
+  .modal-container {
+    width: 40%;
+  }
+  .close-modal, .modal-error {
+    font-size: 1.5vw;
+  }
+}
+
+@media (max-width: 768px) {
+  .modal-container {
+    width: 60%;
+    padding: .5vw;
+  }
+  .close-modal, .modal-error {
+    font-size: 2.5vw;
+  }
+}
+
+@media (max-width: 500px) {
+  .modal-container {
+    width: 90%;
+    padding: 1vw 2vw;
+  }
+  .close-modal, .modal-error {
+    font-size: 3.5vw;
+  }
+}
+
+@media (max-width: 375px) {
+  .modal-container {
+    width: 95%;
+    padding: 3vw 5vw;
+  }
+  .close-modal, .modal-error {
+    font-size: 5.5vw;
+  }
+}
+
+@media (max-width: 320px) {
+    .error {
+        font-size: 5vw;
+    }
+}
+
