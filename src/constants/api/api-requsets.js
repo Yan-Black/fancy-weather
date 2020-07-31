@@ -5,9 +5,9 @@ import {
   forecastUrl,
   translateUrl,
   backgroundUrl,
-} from './api-urls';
-import { regex, forecastRegex, errData } from './app-constants';
-import placeholder from '../assets/images/background.jpg';
+} from '../api/api-urls';
+import { regex, forecastRegex, errData } from '../app-constants';
+import placeholder from '../../assets/images/background.jpg';
 
 export const getUserLocation = async (
   setLoading,

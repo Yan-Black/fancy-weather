@@ -7,7 +7,7 @@ import Main from '../Main';
 import Modal from '../ErrorModal';
 import InfoLoader from '../InfoLoader';
 import { en, ru, be } from '../../constants/app-langs';
-import { getUserLocation } from '../../constants/api-requsets';
+import { getUserLocation } from '../../constants/api/api-requsets';
 import { errData } from '../../constants/app-constants';
 import './index.css';
 

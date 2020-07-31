@@ -5,8 +5,8 @@ import {
   TRANSLATE_API,
   GEOLOCATION_API
 } from './api-keys';
-import { en } from './app-langs';
-import { celsius } from './app-constants';
+import { en } from '../app-langs';
+import { celsius } from '../app-constants';
 
 const { appUnits } = localStorage;
 

@@ -8,7 +8,7 @@ import {
   convertToMetric,
   defaultUnits,
 } from '../../constants/app-constants';
-import { translateApiData, getBackImage } from '../../constants/api-requsets';
+import { translateApiData, getBackImage } from '../../constants/api/api-requsets';
 import { en, ru, be, langSelectors } from '../../constants/app-langs';
 import { weatherCodesRu, weatherCodesEng, weatherCodesBel } from '../../constants/app-weather-codes';
 import { appContext } from '../App';

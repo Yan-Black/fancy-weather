@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMicrophone } from '@fortawesome/free-solid-svg-icons';
 import { faPlay, faStop } from '@fortawesome/free-solid-svg-icons';
-import { geoLocation } from '../../constants/api-requsets';
+import { geoLocation } from '../../constants/api/api-requsets';
 import { recognition, phrase, synth, ruForecast, enForecast } from '../../constants/app-constants';
 import { weatherCodesRu, weatherCodesEng, weatherCodesBel } from '../../constants/app-weather-codes';
 import { appContext } from '../App';
